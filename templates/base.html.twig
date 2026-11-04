@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="bg">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% set page_title = block('title') is defined and block('title')|trim is not empty
+            ? block('title')|trim ~ ' · Занималник'
+            : 'Занималник — куестове от реалния живот' %}
+        {% set page_description = block('description') is defined and block('description')|trim is not empty
+            ? block('description')|trim
+            : 'Куестове от реалния живот, които тренират внимание, нестандартно мислене, интуиция и усет за думите.' %}
+        <title>{{ page_title }}</title>
+        <meta name="description" content="{{ page_description }}">
+        <link rel="canonical" href="{{ app.request.uri|split('?')|first }}">
+
+        <meta property="og:site_name" content="Занималник">
+        <meta property="og:locale" content="bg_BG">
+        <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+        <meta property="og:title" content="{{ page_title }}">
+        <meta property="og:description" content="{{ page_description }}">
+        <meta property="og:url" content="{{ app.request.uri|split('?')|first }}">
+        {% block og_image %}{% endblock %}
+
+        <meta name="color-scheme" content="light dark">
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><circle cx=%2232%22 cy=%2232%22 r=%2228%22 fill=%22%238a3b12%22/><text x=%2232%22 y=%2243%22 font-size=%2232%22 text-anchor=%22middle%22 fill=%22%23f3e9d2%22 font-family=%22serif%22>З</text></svg>">
+
+        {% block stylesheets %}{% endblock %}
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    <body class="min-h-screen antialiased">
+        {% block body %}{% endblock %}
+    </body>
+</html>
