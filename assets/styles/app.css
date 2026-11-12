@@ -286,3 +286,119 @@
 
     .error-code { font-family: var(--font-mono); font-size: 4.5rem; font-weight: 700; color: var(--accent); line-height: 1; }
 }
+
+/* ------------------------------------------------------------------ */
+/* Sign of the day — the deliberately modern layer                    */
+/* ------------------------------------------------------------------ */
+@layer components {
+    .sign { padding: 1rem 1rem 2rem; }
+    .sign-inner {
+        max-width: 56rem; margin-inline: auto;
+        background: #15131a; color: #f4f1ea;
+        border-radius: 1.5rem; padding: clamp(1.5rem, 4vw, 2.5rem);
+        box-shadow: 0 30px 60px -20px rgb(20 14 8 / .45);
+        position: relative; overflow: hidden;
+    }
+    .sign-inner::before {
+        content: ""; position: absolute; inset: -40% -10% auto auto; width: 28rem; height: 28rem;
+        background: radial-gradient(circle, rgb(255 255 255 / .07), transparent 60%); pointer-events: none;
+    }
+    .sign-title {
+        font-family: var(--font-sans); font-weight: 800; font-size: .8rem;
+        letter-spacing: .25em; text-transform: uppercase; color: #b9b3c9;
+    }
+    .sign-lead { font-size: 1.15rem; margin-top: .5rem; }
+    .sign-form { display: flex; flex-direction: column; gap: 1rem; }
+    .sign a, .sign button { color: inherit; }
+
+    /* segmented control */
+    .sign-tabs { display: inline-flex; align-self: flex-start; padding: .25rem; gap: .25rem; border-radius: 999px; background: rgb(255 255 255 / .08); }
+    .sign-tabs label { padding: .5rem 1.1rem; border-radius: 999px; font-weight: 700; cursor: pointer; color: #cfc9dd; transition: background .15s, color .15s; }
+    .sign-tabs input:checked + label { background: #f4f1ea; color: #15131a; }
+    .sign-tabs input:focus-visible + label,
+    .zodiac-grid input:focus-visible + label,
+    .role-list input:focus-visible + label { outline: 3px solid #8ab4ff; outline-offset: 2px; }
+
+    /* panels switch purely in CSS (no server round-trip) */
+    .sign-panel { display: none; }
+    .sign-form:has(#basis-zodiac:checked) .sign-panel-zodiac,
+    .sign-form:has(#basis-name:checked) .sign-panel-name,
+    .sign-form:has(#basis-role:checked) .sign-panel-role { display: block; }
+
+    .zodiac-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.25rem, 1fr)); gap: .5rem; }
+    .zodiac-grid label, .role-list label {
+        display: flex; align-items: center; gap: .5rem; cursor: pointer;
+        padding: .6rem .75rem; border-radius: .8rem; font-weight: 600;
+        background: rgb(255 255 255 / .06); border: 1px solid rgb(255 255 255 / .1);
+        transition: background .15s, border-color .15s, transform .1s;
+    }
+    .zodiac-grid label:hover, .role-list label:hover { background: rgb(255 255 255 / .12); }
+    .zodiac-grid input:checked + label, .role-list input:checked + label { background: #f4f1ea; color: #15131a; border-color: #f4f1ea; }
+    .zodiac-symbol { font-size: 1.2rem; width: 1.3rem; text-align: center; font-family: system-ui, sans-serif; }
+    .role-list { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+    .sign-label { display: block; font-weight: 700; margin-bottom: .35rem; }
+    .sign-input {
+        width: 100%; max-width: 24rem; font: inherit; font-size: 1.1rem; color: #f4f1ea;
+        background: rgb(255 255 255 / .06); border: 1.5px solid rgb(255 255 255 / .2); border-radius: .8rem; padding: .7rem .9rem;
+    }
+    .sign-input::placeholder { color: #8e889c; }
+    .sign-input:focus { outline: 3px solid #8ab4ff; outline-offset: 1px; }
+    .sign-note { font-size: .85rem; color: #b9b3c9; margin-top: .4rem; }
+    .sign-error { color: #ffb4a8; font-weight: 700; }
+
+    .sign-btn {
+        align-self: flex-start; display: inline-flex; align-items: center; gap: .5rem;
+        font-weight: 800; font-size: 1rem; padding: .8rem 1.4rem; border-radius: 999px; cursor: pointer;
+        background: linear-gradient(135deg, #ffd27a, #ff8a6b 55%, #c86bff); color: #15131a !important; border: 0;
+        transition: transform .12s ease, filter .12s ease;
+    }
+    .sign-btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    .sign-btn:disabled { opacity: .6; }
+    .sign-btn-ghost { background: transparent; color: #f4f1ea !important; border: 1.5px solid rgb(255 255 255 / .35); padding: .55rem 1.1rem; }
+
+    /* result */
+    .sign-result { display: grid; gap: 1.5rem 2.5rem; align-items: center; grid-template-columns: auto 1fr; margin-top: 2rem; padding-left: .5rem; }
+    @media (max-width: 640px) { .sign-result { grid-template-columns: 1fr; justify-items: center; text-align: center; } .sign-result .sign-btn { align-self: center; } }
+
+    .sign-orb {
+        position: relative; width: clamp(10rem, 40vw, 14rem); aspect-ratio: 1; border-radius: 50%;
+        display: grid; place-items: center; color: var(--sign-text);
+        background:
+            radial-gradient(circle at 30% 25%, rgb(255 255 255 / .45), transparent 45%),
+            radial-gradient(circle at 70% 80%, rgb(0 0 0 / .25), transparent 55%),
+            var(--sign-color);
+        box-shadow: 0 0 0 6px rgb(255 255 255 / .06), 0 0 60px -5px var(--sign-color), inset 0 -10px 30px rgb(0 0 0 / .2);
+    }
+    .sign-orb-ring {
+        position: absolute; inset: -14px; border-radius: 50%;
+        background: conic-gradient(from 0deg, transparent 0 70%, var(--sign-color) 85%, #fff 100%);
+        -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+                mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+        opacity: .9; animation: sign-spin 8s linear infinite;
+    }
+    .sign-number {
+        font-family: var(--font-mono); font-weight: 800; font-size: clamp(3.5rem, 14vw, 5.5rem);
+        line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums;
+    }
+    .sign-for { color: #b9b3c9; }
+    .sign-for strong { color: #f4f1ea; }
+    .sign-color-name { font-family: var(--font-serif); font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 700; line-height: 1.1; margin-top: .25rem; }
+    .sign-hint { margin: .5rem 0 1rem; color: #d9d4e4; }
+    .sign-number-inline { font-family: var(--font-mono); }
+
+    .sign-result.is-new .sign-orb { animation: sign-reveal .9s cubic-bezier(.2, .8, .2, 1) both; }
+    .sign-result.is-new .sign-text { animation: sign-fade .7s .25s ease both; }
+
+    @keyframes sign-reveal {
+        0% { transform: scale(.4) rotate(-25deg); filter: blur(12px) saturate(0); opacity: 0; }
+        60% { transform: scale(1.06) rotate(4deg); filter: blur(0) saturate(1.2); opacity: 1; }
+        100% { transform: scale(1) rotate(0); filter: none; }
+    }
+    @keyframes sign-fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes sign-spin { to { transform: rotate(1turn); } }
+
+    @media (prefers-reduced-motion: reduce) {
+        .sign-orb-ring, .sign-result.is-new .sign-orb, .sign-result.is-new .sign-text { animation: none; }
+    }
+}

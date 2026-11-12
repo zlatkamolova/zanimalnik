@@ -1,0 +1,92 @@
+<section {{ attributes.defaults({class: 'sign', 'aria-labelledby': 'sign-title'}) }}>
+    <div class="sign-inner">
+        <h2 id="sign-title" class="sign-title">Знак на деня</h2>
+
+        {% set sign = this.sign %}
+        {% if sign %}
+            {# A new id for every result makes the element (and its animation) start fresh. #}
+            <div id="sign-result-{{ chosen|replace({':': '-', '%': ''})|slice(0, 60) }}"
+                 class="sign-result{{ justRevealed ? ' is-new' }}"
+                 data-controller="daily-sign"
+                 data-daily-sign-cookie-name-value="{{ constant('App\\Twig\\Components\\SignOfTheDay::COOKIE') }}"
+                 data-daily-sign-cookie-value-value="{{ chosen }}"
+                 data-daily-sign-number-value="{{ sign.number }}"
+                 data-daily-sign-animate-value="{{ justRevealed ? 'true' : 'false' }}"
+                 style="--sign-color: {{ sign.hex }}; --sign-text: {{ sign.textColor }}">
+                <div class="sign-orb" role="img" aria-label="Цвят „{{ sign.colorName }}“, число {{ sign.number }}">
+                    <span class="sign-orb-ring" aria-hidden="true"></span>
+                    <span class="sign-number" data-daily-sign-target="number" aria-hidden="true">{{ sign.number }}</span>
+                </div>
+                <div class="sign-text">
+                    <p class="sign-for">
+                        За <strong>{{ this.chosenLabel }}</strong> ·
+                        {{ this.today|format_date(pattern: 'd MMMM', locale: 'bg') }}
+                    </p>
+                    <p class="sign-color-name">{{ sign.colorName }}</p>
+                    <p class="sign-hint">Числото ти за днес е <strong class="sign-number-inline">{{ sign.number }}</strong>. Утре ще е друго.</p>
+                    <button type="button" class="sign-btn sign-btn-ghost"
+                            data-action="live#action" data-live-action-param="change">
+                        Смени
+                    </button>
+                </div>
+            </div>
+        {% else %}
+            <form id="sign-form" class="sign-form" novalidate
+                  data-controller="daily-sign"
+                  data-daily-sign-cookie-name-value="{{ constant('App\\Twig\\Components\\SignOfTheDay::COOKIE') }}"
+                  data-daily-sign-cookie-value-value=""
+                  data-action="live#action:prevent" data-live-action-param="reveal">
+                <p class="sign-lead">Избери основа и ще получиш цвят и число за днес.</p>
+
+                <fieldset class="sign-tabs">
+                    <legend class="sr-only">Основа на знака</legend>
+                    {% for b in this.bases %}
+                        <input type="radio" class="sr-only" name="basis" id="basis-{{ b.value }}" value="{{ b.value }}"
+                               data-model="norender|basis" {{ basis == b.value ? 'checked' }}>
+                        <label for="basis-{{ b.value }}">{{ b.label }}</label>
+                    {% endfor %}
+                </fieldset>
+
+                <fieldset class="sign-panel sign-panel-zodiac">
+                    <legend class="sr-only">Зодия</legend>
+                    <div class="zodiac-grid">
+                        {% for slug, z in this.zodiacSigns %}
+                            <input type="radio" class="sr-only" name="zodiac" id="z-{{ slug }}" value="{{ slug }}"
+                                   data-model="norender|zodiac" {{ zodiac == slug ? 'checked' }}>
+                            <label for="z-{{ slug }}"><span class="zodiac-symbol" aria-hidden="true">{{ z[1] }}&#xFE0E;</span>{{ z[0] }}</label>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+
+                <div class="sign-panel sign-panel-name">
+                    <label for="sign-name" class="sign-label">Име</label>
+                    <input type="text" id="sign-name" class="sign-input" name="name" maxlength="{{ this.nameMaxLength }}"
+                           autocomplete="given-name" placeholder="напр. Мария" value="{{ name }}"
+                           data-model="norender|name">
+                    <p class="sign-note">Името остава само в твоя браузър. Не го записваме.</p>
+                </div>
+
+                <fieldset class="sign-panel sign-panel-role">
+                    <legend class="sr-only">Роля</legend>
+                    <div class="role-list">
+                        {% for r in this.roleOptions %}
+                            <input type="radio" class="sr-only" name="role" id="r-{{ r.slug }}" value="{{ r.slug }}"
+                                   data-model="norender|role" {{ role == r.slug ? 'checked' }}>
+                            <label for="r-{{ r.slug }}">{{ r.name }}</label>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+
+                {% if errors is not empty %}
+                    <p class="sign-error" role="alert">{{ errors|join(' ') }}</p>
+                {% endif %}
+
+                <button type="submit" class="sign-btn" data-loading="addAttribute(disabled)">
+                    <span data-loading="hide">Покажи знака</span>
+                    <span data-loading="show" hidden>Гадаем…</span>
+                </button>
+                <noscript><p class="sign-note">Знакът на деня има нужда от JavaScript.</p></noscript>
+            </form>
+        {% endif %}
+    </div>
+</section>

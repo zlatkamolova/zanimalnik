@@ -11,8 +11,7 @@
         </div>
     </section>
 
-    {# The sign of the day is added here in step 5 #}
-    {% block sign_of_the_day %}{% endblock %}
+    <twig:SignOfTheDay/>
 
     {% if daily is not empty %}
         <section class="mx-auto max-w-6xl px-4 py-8" aria-labelledby="daily-title">
