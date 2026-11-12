@@ -7,6 +7,10 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    # app.public_dir is set by App\Kernel (web root differs locally and on the server)
+    app.uploads_dir: '%app.public_dir%/uploads'
+    app.quest_pdf_dir: '%app.uploads_dir%/quests/pdf'
+    app.quest_cover_dir: '%app.uploads_dir%/quests/covers'
 
 services:
     # default configuration for services in *this* file
