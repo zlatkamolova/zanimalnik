@@ -1,0 +1,3 @@
+framework:
+    # File locks inside the project (shared hosting: don't rely on the system /tmp)
+    lock: 'flock://%kernel.project_dir%/var/lock'

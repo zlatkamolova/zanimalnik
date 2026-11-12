@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Repository\DailyChallengeRepository;
+use App\Daily\DailyPickService;
 use App\Repository\QuestRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
@@ -19,19 +19,19 @@ final class DashboardController extends AbstractDashboardController
 {
     public function __construct(
         private readonly QuestRepository $quests,
-        private readonly DailyChallengeRepository $dailyChallenges,
+        private readonly DailyPickService $daily,
     ) {
     }
 
     public function index(): Response
     {
-        $today = new \DateTimeImmutable('today');
+        $today = $this->daily->today();
 
         return $this->render('admin/dashboard.html.twig', [
             'published_count' => $this->quests->count(['isPublished' => true]),
             'draft_count' => $this->quests->count(['isPublished' => false]),
             'today' => $today,
-            'today_challenges' => $this->dailyChallenges->findForDate($today),
+            'today_challenges' => $this->daily->ensureForDate($today),
         ]);
     }
 

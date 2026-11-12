@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Daily\DailyPickService;
 use App\Entity\DailyChallenge;
 use App\Entity\Path;
 use App\Entity\Quest;
@@ -31,6 +32,7 @@ final class DailyChallengeAdminController extends AbstractController
         private readonly QuestRepository $quests,
         private readonly DailyChallengeRepository $challenges,
         private readonly EntityManagerInterface $em,
+        private readonly DailyPickService $daily,
     ) {
     }
 
@@ -42,7 +44,8 @@ final class DailyChallengeAdminController extends AbstractController
         $days = [];
         foreach ($this->dateRange() as $date) {
             $byPath = [];
-            foreach ($this->challenges->findForDate($date) as $challenge) {
+            // fills the week ahead so the admin sees (and can change) what's coming
+            foreach ($this->daily->ensureForDate($date) as $challenge) {
                 $byPath[$challenge->getPath()->getId()] = $challenge;
             }
             $days[] = ['date' => $date, 'challenges' => $byPath];
@@ -93,6 +96,7 @@ final class DailyChallengeAdminController extends AbstractController
         if ($date && $path && ($challenge = $this->challenges->findOneForDateAndPath($date, $path))) {
             $this->em->remove($challenge);
             $this->em->flush();
+            $this->daily->fillMissing($date);
             $this->addFlash('success', \sprintf('%s · %s: денят е върнат на автоматичен избор.', $date->format('d.m'), $path->getName()));
         }
 
@@ -102,7 +106,7 @@ final class DailyChallengeAdminController extends AbstractController
     /** @return list<\DateTimeImmutable> */
     private function dateRange(): array
     {
-        $today = new \DateTimeImmutable('today');
+        $today = $this->daily->today();
 
         return array_map(fn (int $i) => $today->modify("+$i days"), range(0, self::DAYS - 1));
     }

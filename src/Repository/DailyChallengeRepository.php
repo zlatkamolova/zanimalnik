@@ -51,4 +51,29 @@ class DailyChallengeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleColumnResult());
     }
+
+    /**
+     * Last date (before $before) on which each quest was the challenge of $path.
+     *
+     * @return array<int, string> questId => 'Y-m-d'
+     */
+    public function findLastUseDates(Path $path, \DateTimeImmutable $before): array
+    {
+        $rows = $this->createQueryBuilder('d')
+            ->select('IDENTITY(d.quest) AS quest', 'MAX(d.date) AS last')
+            ->andWhere('d.path = :path')
+            ->andWhere('d.date < :before')
+            ->setParameter('path', $path)
+            ->setParameter('before', $before->setTime(0, 0), 'date_immutable')
+            ->groupBy('d.quest')
+            ->getQuery()
+            ->getArrayResult();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $result[(int) $row['quest']] = $row['last'] instanceof \DateTimeInterface ? $row['last']->format('Y-m-d') : (string) $row['last'];
+        }
+
+        return $result;
+    }
 }
