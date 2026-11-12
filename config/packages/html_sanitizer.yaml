@@ -1,0 +1,27 @@
+# Rich text from the admin (quest body, About page) is sanitized when rendered:
+# only simple formatting survives, scripts/styles/iframes are dropped.
+framework:
+    html_sanitizer:
+        sanitizers:
+            app.rich_text:
+                allow_elements:
+                    p: []
+                    br: []
+                    div: []
+                    h2: []
+                    h3: []
+                    h4: []
+                    strong: []
+                    b: []
+                    em: []
+                    i: []
+                    del: []
+                    blockquote: []
+                    ul: []
+                    ol: []
+                    li: []
+                    a: ['href', 'title']
+                allowed_link_schemes: ['https', 'http', 'mailto']
+                force_attributes:
+                    a:
+                        rel: 'noopener'

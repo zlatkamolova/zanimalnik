@@ -1,0 +1,26 @@
+{# A quest as a card / scroll in lists. #}
+{% props quest, headingLevel = 3 %}
+{% set main = quest.path %}
+<article class="quest-card {{ attributes.render('class') }}" style="--path: {{ main.color }}">
+    {% set cover = quest_cover_url(quest, 'card') %}
+    {% if cover %}
+        <img class="quest-card-cover" src="{{ cover }}" alt="" loading="lazy" decoding="async">
+    {% endif %}
+    <div class="quest-card-body">
+        <p class="quest-card-paths">
+            {% for p in quest.allPaths %}
+                <span class="path-chip" style="--path: {{ p.color }}">{{ p.name }}</span>
+            {% endfor %}
+        </p>
+        <h{{ headingLevel }} class="quest-card-title">
+            <a href="{{ path('app_quest', {slug: quest.slug}) }}" class="stretched-link">{{ quest.title }}</a>
+        </h{{ headingLevel }}>
+        <p class="quest-card-summary">{{ quest.summary }}</p>
+        <p class="quest-card-meta">
+            <twig:Difficulty :level="quest.difficulty"/>
+            <span aria-hidden="true">·</span>
+            <span>{{ quest.duration }}</span>
+            {% if quest.pdfPath %}<span aria-hidden="true">·</span><span>с лист за изтегляне</span>{% endif %}
+        </p>
+    </div>
+</article>

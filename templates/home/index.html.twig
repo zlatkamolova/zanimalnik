@@ -1,9 +1,60 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <main class="mx-auto max-w-2xl px-4 py-16 text-center">
-        <h1 class="text-5xl">Занималник</h1>
-        <p class="mt-4 text-ink-soft">Куестове от реалния живот. Скоро.</p>
-        <p class="mt-8 font-mono text-4xl text-accent">42</p>
-    </main>
+    <section class="hero">
+        <div class="mx-auto max-w-4xl px-4 pt-12 pb-8 text-center">
+            <p class="eyebrow">Куестове от реалния живот</p>
+            <h1 class="hero-title">Занималник</h1>
+            <p class="hero-lead">
+                Малки приключения за обикновените дни. Тренират погледа, думите, предчувствието и смелостта да тръгнеш по друг път.
+            </p>
+        </div>
+    </section>
+
+    {# The sign of the day is added here in step 5 #}
+    {% block sign_of_the_day %}{% endblock %}
+
+    {% if daily is not empty %}
+        <section class="mx-auto max-w-6xl px-4 py-8" aria-labelledby="daily-title">
+            <twig:Ornament/>
+            <h2 id="daily-title" class="section-title">Предизвикателства на деня</h2>
+            <p class="section-lead">{{ 'now'|format_date(pattern: "EEEE, d MMMM", locale: 'bg')|capitalize }} — по едно за всяка пътека.</p>
+            <ul class="card-grid" role="list">
+                {% for challenge in daily %}
+                    <li><twig:QuestCard :quest="challenge.quest"/></li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+
+    <section class="mx-auto max-w-6xl px-4 py-8" aria-labelledby="paths-title">
+        <twig:Ornament/>
+        <h2 id="paths-title" class="section-title">Четирите пътеки</h2>
+        <ul class="path-grid" role="list">
+            {% for p in paths %}
+                <li>
+                    <a href="{{ path('app_path', {slug: p.slug}) }}" class="path-tile" style="--path: {{ p.color }}">
+                        <twig:PathSeal :path="p" :size="64"/>
+                        <span class="path-tile-name">{{ p.name }}</span>
+                        <span class="path-tile-text">{{ p.description|u.truncate(120, '…', false) }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    {% if latest is not empty %}
+        <section class="mx-auto max-w-6xl px-4 py-8" aria-labelledby="latest-title">
+            <twig:Ornament/>
+            <h2 id="latest-title" class="section-title">Последни куестове</h2>
+            <ul class="card-grid" role="list">
+                {% for quest in latest %}
+                    <li><twig:QuestCard :quest="quest"/></li>
+                {% endfor %}
+            </ul>
+            <p class="mt-8 text-center">
+                <a href="{{ path('app_quests') }}" class="btn">Всички куестове</a>
+            </p>
+        </section>
+    {% endif %}
 {% endblock %}

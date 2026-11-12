@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block description %}{{ body|striptags|trim }}{% endblock %}
+
+{% block body %}
+    <article class="mx-auto max-w-3xl px-4 py-12">
+        <h1 class="page-title text-center">{{ title }}</h1>
+        <twig:Ornament class="my-6"/>
+        <div class="prose-quest">
+            {{ body|sanitize_html('app.rich_text') }}
+        </div>
+    </article>
+{% endblock %}

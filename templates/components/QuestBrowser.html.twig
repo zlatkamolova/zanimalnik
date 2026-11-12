@@ -1,0 +1,48 @@
+<div {{ attributes.defaults({class: 'quest-browser'}) }}>
+    {# Works as a plain GET form without JavaScript; with JS the Live Component updates on change. #}
+    <form method="get" action="{{ path('app_quests') }}" class="filters" role="search" aria-label="Филтър на куестовете"
+          data-action="submit->live#$render:prevent">
+        <div class="filter">
+            <label for="f-path">Пътека</label>
+            <select id="f-path" name="pateka" data-model="path">
+                <option value="">Всички пътеки</option>
+                {% for p in this.paths %}
+                    <option value="{{ p.slug }}" {{ p.slug == path ? 'selected' }}>{{ p.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter">
+            <label for="f-difficulty">Трудност</label>
+            <select id="f-difficulty" name="trudnost" data-model="difficulty">
+                <option value="0">Всякаква</option>
+                {% for value, label in this.difficulties %}
+                    <option value="{{ value }}" {{ value == difficulty ? 'selected' }}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter">
+            <label for="f-tag">Таг</label>
+            <select id="f-tag" name="tag" data-model="tag">
+                <option value="">Всички тагове</option>
+                {% for t in this.tags %}
+                    <option value="{{ t.slug }}" {{ t.slug == tag ? 'selected' }}>{{ t.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <noscript><button type="submit" class="btn">Покажи</button></noscript>
+        {% if this.hasFilters %}
+            <button type="button" class="btn-link" data-action="live#action" data-live-action-param="reset">Изчисти филтрите</button>
+        {% endif %}
+    </form>
+
+    <p class="results-count" role="status" aria-live="polite">
+        {% set n = this.quests|length %}
+        {% if n == 0 %}Няма куестове по тези филтри.{% elseif n == 1 %}1 куест{% else %}{{ n }} куеста{% endif %}
+    </p>
+
+    <ul class="card-grid" role="list" data-loading="addClass(is-loading)">
+        {% for quest in this.quests %}
+            <li><twig:QuestCard :quest="quest" :headingLevel="2"/></li>
+        {% endfor %}
+    </ul>
+</div>

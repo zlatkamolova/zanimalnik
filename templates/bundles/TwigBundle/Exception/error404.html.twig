@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Страницата не е намерена{% endblock %}
+{% block description %}Тази пътека не води наникъде.{% endblock %}
+{% block canonical %}{{ url('app_home') }}{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-2xl px-4 py-20 text-center">
+        <p class="error-code" aria-hidden="true">404</p>
+        <h1 class="page-title">Тази пътека не води наникъде</h1>
+        <twig:Ornament class="my-6"/>
+        <p class="page-lead">
+            Може би картата е стара, а може би някой е преместил табелата.
+            Нищо страшно — понякога най-хубавите куестове започват със заблуждаване.
+        </p>
+        <p class="mt-8 flex flex-wrap justify-center gap-3">
+            <a href="{{ path('app_home') }}" class="btn">Към началото</a>
+            <a href="{{ path('app_quests') }}" class="btn btn-outline">Всички куестове</a>
+        </p>
+    </section>
+{% endblock %}

@@ -7,29 +7,78 @@
             ? block('title')|trim ~ ' · Занималник'
             : 'Занималник — куестове от реалния живот' %}
         {% set page_description = block('description') is defined and block('description')|trim is not empty
-            ? block('description')|trim
+            ? block('description')|striptags|trim
             : 'Куестове от реалния живот, които тренират внимание, нестандартно мислене, интуиция и усет за думите.' %}
+        {% set canonical = block('canonical') is defined and block('canonical')|trim is not empty
+            ? block('canonical')|trim
+            : url(app.request.attributes.get('_route') ?? 'app_home', app.request.attributes.get('_route_params') ?? {}) %}
+        {% if page_description|length > 180 %}{% set page_description = page_description|slice(0, 179)|trim ~ '…' %}{% endif %}
         <title>{{ page_title }}</title>
         <meta name="description" content="{{ page_description }}">
-        <link rel="canonical" href="{{ app.request.uri|split('?')|first }}">
+        <link rel="canonical" href="{{ canonical }}">
 
         <meta property="og:site_name" content="Занималник">
         <meta property="og:locale" content="bg_BG">
         <meta property="og:type" content="{% block og_type %}website{% endblock %}">
         <meta property="og:title" content="{{ page_title }}">
         <meta property="og:description" content="{{ page_description }}">
-        <meta property="og:url" content="{{ app.request.uri|split('?')|first }}">
+        <meta property="og:url" content="{{ canonical }}">
         {% block og_image %}{% endblock %}
+        <meta name="twitter:card" content="summary_large_image">
 
         <meta name="color-scheme" content="light dark">
+        <meta name="theme-color" content="#f3e9d2" media="(prefers-color-scheme: light)">
+        <meta name="theme-color" content="#1d1914" media="(prefers-color-scheme: dark)">
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><circle cx=%2232%22 cy=%2232%22 r=%2228%22 fill=%22%238a3b12%22/><text x=%2232%22 y=%2243%22 font-size=%2232%22 text-anchor=%22middle%22 fill=%22%23f3e9d2%22 font-family=%22serif%22>З</text></svg>">
+        <link rel="sitemap" type="application/xml" href="{{ path('app_sitemap') }}">
 
         {% block stylesheets %}{% endblock %}
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body class="min-h-screen antialiased">
-        {% block body %}{% endblock %}
+    <body class="flex min-h-screen flex-col antialiased">
+        <a href="#main" class="skip-link">Към съдържанието</a>
+
+        {% set current_route = app.request.attributes.get('_route') %}
+        <header class="site-header" data-controller="menu">
+            <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+                <a href="{{ path('app_home') }}" class="site-logo" {{ current_route == 'app_home' ? 'aria-current="page"' }}>
+                    Занималник
+                </a>
+
+                <button type="button" class="menu-toggle md:hidden"
+                        data-action="menu#toggle" data-menu-target="button"
+                        aria-expanded="false" aria-controls="site-nav">
+                    <span class="sr-only">Меню</span>
+                    <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+                </button>
+
+                <nav id="site-nav" class="site-nav" data-menu-target="nav" aria-label="Основно меню">
+                    <ul>
+                        <li><a href="{{ path('app_quests') }}" {{ current_route == 'app_quests' ? 'aria-current="page"' }}>Всички куестове</a></li>
+                        {% for nav_path in nav_paths() %}
+                            <li><a href="{{ path('app_path', {slug: nav_path.slug}) }}"
+                                   {{ current_route == 'app_path' and app.request.attributes.get('slug') == nav_path.slug ? 'aria-current="page"' }}>{{ nav_path.name }}</a></li>
+                        {% endfor %}
+                        <li><a href="{{ path('app_about') }}" {{ current_route == 'app_about' ? 'aria-current="page"' }}>За сайта</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <main id="main" class="flex-1">
+            {% block body %}{% endblock %}
+        </main>
+
+        <footer class="site-footer">
+            <div class="mx-auto max-w-6xl px-4 py-8">
+                <twig:Ornament/>
+                <p class="mt-4 text-center text-sm">
+                    Занималник · куестове от реалния живот ·
+                    <a href="{{ path('app_about') }}">За сайта</a>
+                </p>
+            </div>
+        </footer>
     </body>
 </html>

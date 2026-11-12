@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ quest.title }}{% endblock %}
+{% block description %}{{ quest.summary }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_image %}
+    {% set cover = quest_cover_url(quest) %}
+    {% if cover %}<meta property="og:image" content="{{ absolute_url(cover) }}">{% endif %}
+{% endblock %}
+
+{% block body %}
+    {% set pdf = quest_pdf_url(quest) %}
+    <article class="quest" style="--path: {{ quest.path.color }}">
+        <header class="mx-auto max-w-3xl px-4 pt-10 pb-6">
+            <nav aria-label="Пътеки на куеста" class="quest-paths">
+                {% for p in quest.allPaths %}
+                    <a href="{{ path('app_path', {slug: p.slug}) }}" class="path-chip" style="--path: {{ p.color }}">
+                        <twig:PathSeal :path="p" :size="22"/> {{ p.name }}
+                    </a>
+                {% endfor %}
+            </nav>
+            <h1 class="page-title mt-4">{{ quest.title }}</h1>
+            <p class="page-lead">{{ quest.summary }}</p>
+
+            <dl class="quest-facts">
+                <div><dt>Трудност</dt><dd><twig:Difficulty :level="quest.difficulty"/></dd></div>
+                <div><dt>Продължителност</dt><dd>{{ quest.duration }}</dd></div>
+                {% if quest.materials %}
+                    <div><dt>Нужни неща</dt><dd>{{ quest.materials }}</dd></div>
+                {% endif %}
+            </dl>
+        </header>
+
+        {% set cover = quest_cover_url(quest) %}
+        {% if cover %}
+            <figure class="mx-auto max-w-4xl px-4">
+                <img class="quest-cover" src="{{ cover }}" alt="Корица на куеста „{{ quest.title }}“" decoding="async">
+            </figure>
+        {% endif %}
+
+        <div class="mx-auto max-w-3xl px-4 py-6">
+            <twig:Ornament/>
+            <div class="prose-quest">
+                {{ quest.body|sanitize_html('app.rich_text') }}
+            </div>
+
+            {% if pdf %}
+                <section class="quest-sheet" aria-labelledby="sheet-title">
+                    <h2 id="sheet-title" class="sheet-title">Листът на куеста</h2>
+                    <p>Разпечатай го и попълвай в движение. Свободен е — без регистрация.</p>
+                    <p>
+                        <a href="{{ pdf }}" class="btn" download data-turbo="false">
+                            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12m0 0-5-5m5 5 5-5M5 20h14"/></svg>
+                            Изтегли листа на куеста
+                        </a>
+                    </p>
+                    <details class="pdf-preview">
+                        <summary>Преглед на листа</summary>
+                        <object data="{{ pdf }}#view=FitH" type="application/pdf" width="100%" height="720" aria-label="Листът на куеста „{{ quest.title }}“ (PDF)">
+                            <p>Браузърът не показва PDF тук. <a href="{{ pdf }}" data-turbo="false">Отвори листа</a>.</p>
+                        </object>
+                    </details>
+                </section>
+            {% endif %}
+
+            {% if quest.tags is not empty %}
+                <p class="quest-tags">
+                    <span class="sr-only">Тагове:</span>
+                    {% for tag in quest.tags %}
+                        <a href="{{ path('app_quests', {tag: tag.slug}) }}" class="tag">#{{ tag.name }}</a>
+                    {% endfor %}
+                </p>
+            {% endif %}
+
+            <p class="mt-10">
+                <a href="{{ path('app_path', {slug: quest.path.slug}) }}">← Още от пътеката „{{ quest.path.name }}“</a>
+            </p>
+        </div>
+    </article>
+{% endblock %}

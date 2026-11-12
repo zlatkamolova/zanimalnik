@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Всички куестове{% endblock %}
+{% block description %}Всички куестове на Занималника — с филтър по пътека, трудност и таг.{% endblock %}
+{# filtered views share one canonical URL #}
+{% block canonical %}{{ url('app_quests') }}{% endblock %}
+
+{% block body %}
+    <header class="mx-auto max-w-3xl px-4 pt-12 pb-4 text-center">
+        <h1 class="page-title">Всички куестове</h1>
+        <p class="page-lead">Избери пътека, трудност или таг — списъкът се променя веднага.</p>
+    </header>
+    <div class="mx-auto max-w-6xl px-4 pb-12">
+        <twig:QuestBrowser/>
+    </div>
+{% endblock %}

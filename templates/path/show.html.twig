@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ path.name }}{% endblock %}
+{% block description %}{{ path.description }}{% endblock %}
+
+{% block body %}
+    <article style="--path: {{ path.color }}">
+        <header class="mx-auto max-w-3xl px-4 pt-12 pb-6 text-center">
+            <twig:PathSeal :path="path" :size="88" class="mx-auto"/>
+            <p class="eyebrow mt-4">Пътека</p>
+            <h1 class="page-title">{{ path.name }}</h1>
+            <p class="page-lead">{{ path.description }}</p>
+        </header>
+
+        <section class="mx-auto max-w-6xl px-4 py-6" aria-labelledby="quests-title">
+            <twig:Ornament/>
+            <h2 id="quests-title" class="section-title">Куестове по пътеката</h2>
+            {% if quests is empty %}
+                <p class="empty-note">Тук още няма куестове. Скоро ще се появят.</p>
+            {% else %}
+                <ul class="card-grid" role="list">
+                    {% for quest in quests %}
+                        <li><twig:QuestCard :quest="quest"/></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </section>
+
+        <nav class="mx-auto max-w-6xl px-4 py-8" aria-label="Другите пътеки">
+            <ul class="other-paths" role="list">
+                {% for other in paths|filter(o => o.id != path.id) %}
+                    <li><a href="{{ path('app_path', {slug: other.slug}) }}" style="--path: {{ other.color }}"><twig:PathSeal :path="other" :size="32"/> {{ other.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </article>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% props level %}
+{% set labels = {1: 'Лесен', 2: 'Среден', 3: 'Труден'} %}
+<span class="difficulty" title="Трудност: {{ labels[level] ?? '' }}">
+    <span aria-hidden="true">{% for i in 1..3 %}<span class="difficulty-dot{{ i <= level ? ' is-on' }}"></span>{% endfor %}</span>
+    {{ labels[level] ?? '' }}
+</span>

@@ -55,8 +55,16 @@ final class QuestCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        $view = Action::new('viewOnSite', 'Виж на сайта', 'fa fa-arrow-up-right-from-square')
+            ->linkToUrl(fn (Quest $quest) => $this->generateUrl('app_quest', ['slug' => $quest->getSlug()]))
+            ->setHtmlAttributes(['target' => '_blank', 'rel' => 'noopener'])
+            ->displayIf(fn (Quest $quest) => $quest->isVisible());
+
         // everything is visible on the edit page; a separate read-only page isn't needed
-        return $actions->disable(Action::DETAIL);
+        return $actions
+            ->disable(Action::DETAIL)
+            ->add(Crud::PAGE_INDEX, $view)
+            ->add(Crud::PAGE_EDIT, $view);
     }
 
     public function configureFilters(Filters $filters): Filters

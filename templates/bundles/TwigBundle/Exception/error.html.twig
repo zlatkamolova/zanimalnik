@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Нещо се обърка{% endblock %}
+{% block canonical %}{{ url('app_home') }}{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-2xl px-4 py-20 text-center">
+        <p class="error-code" aria-hidden="true">{{ status_code }}</p>
+        <h1 class="page-title">Нещо се обърка</h1>
+        <twig:Ornament class="my-6"/>
+        <p class="page-lead">Свитъкът се скъса по средата. Опитай пак след малко.</p>
+        <p class="mt-8"><a href="{{ path('app_home') }}" class="btn">Към началото</a></p>
+    </section>
+{% endblock %}
