@@ -18,6 +18,20 @@ class Path implements SluggableInterface, \Stringable
 {
     use TimestampableTrait;
 
+    /** Seal symbols drawn on the site (SVG per name). Label shown in the admin => stored name. */
+    public const SYMBOLS = [
+        'Око' => 'eye',
+        'Перо' => 'quill',
+        'Луна' => 'moon',
+        'Спирала' => 'spiral',
+        'Ключ' => 'key',
+        'Компас' => 'compass',
+        'Звезда' => 'star',
+        'Лист' => 'leaf',
+        'Пламък' => 'flame',
+        'Вълна' => 'wave',
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

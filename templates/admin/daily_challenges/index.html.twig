@@ -1,0 +1,78 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Предизвикателства на деня{% endblock %}
+
+{% block main %}
+    <p>
+        Всяка нощ в 00:05 за всяка пътека се избира по един куест от отметнатите като „Може да бъде предизвикателство на деня“.
+        Тук можете да изберете куест за конкретен ден на ръка — автоматичният избор няма да го промени.
+    </p>
+
+    {% set token = csrf_token('daily-challenge') %}
+
+    <div class="table-responsive ea-not-prose">
+        <table class="table daily-grid">
+            <thead>
+                <tr>
+                    <th scope="col">Ден</th>
+                    {% for path in paths %}
+                        <th scope="col"><span style="color: {{ path.color }}">●</span> {{ path.name }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for day in days %}
+                    {% set iso = day.date|date('Y-m-d') %}
+                    <tr>
+                        <th scope="row">
+                            {{ day.date|format_date(pattern: 'EEEE', locale: 'bg')|capitalize }}<br>
+                            <small>{{ day.date|date('d.m.Y') }}</small>
+                            {% if loop.first %}<br><twig:ea:Badge color="info">днес</twig:ea:Badge>{% endif %}
+                        </th>
+                        {% for path in paths %}
+                            {% set challenge = day.challenges[path.id] ?? null %}
+                            <td>
+                                {% if challenge %}
+                                    <strong>{{ challenge.quest.title }}</strong>
+                                    {% if challenge.manual %}
+                                        <twig:ea:Badge color="warning">на ръка</twig:ea:Badge>
+                                    {% else %}
+                                        <twig:ea:Badge color="secondary">автоматично</twig:ea:Badge>
+                                    {% endif %}
+                                {% else %}
+                                    <em class="text-muted">ще бъде избран автоматично</em>
+                                {% endif %}
+
+                                {% if options[path.id] is not empty %}
+                                    <form method="post" action="{{ path('admin_daily_challenges_set') }}">
+                                        <input type="hidden" name="_token" value="{{ token }}">
+                                        <input type="hidden" name="date" value="{{ iso }}">
+                                        <input type="hidden" name="path" value="{{ path.id }}">
+                                        <label class="visually-hidden" for="q-{{ iso }}-{{ path.id }}">Куест за {{ day.date|date('d.m') }}, {{ path.name }}</label>
+                                        <select class="form-select form-select-sm" name="quest" id="q-{{ iso }}-{{ path.id }}">
+                                            {% for quest in options[path.id] %}
+                                                <option value="{{ quest.id }}" {{ challenge and challenge.quest.id == quest.id ? 'selected' }}>{{ quest.title }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <twig:ea:Button size="sm" variant="outline">Избери</twig:ea:Button>
+                                    </form>
+                                {% else %}
+                                    <small class="text-muted">Няма публикувани куестове в тази пътека.</small>
+                                {% endif %}
+
+                                {% if challenge and challenge.manual %}
+                                    <form method="post" action="{{ path('admin_daily_challenges_reset') }}">
+                                        <input type="hidden" name="_token" value="{{ token }}">
+                                        <input type="hidden" name="date" value="{{ iso }}">
+                                        <input type="hidden" name="path" value="{{ path.id }}">
+                                        <twig:ea:Button size="sm" variant="link">Върни на автоматично</twig:ea:Button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Добре дошли в Занималника{% endblock %}
+
+{% block main %}
+    <p>
+        Публикувани куестове: <strong>{{ published_count }}</strong>
+        · Чернови: <strong>{{ draft_count }}</strong>
+    </p>
+
+    <h2>Предизвикателства за днес, {{ today|date('d.m.Y') }}</h2>
+    {% if today_challenges is empty %}
+        <p>Още не са избрани. Ще бъдат избрани автоматично при първото посещение на сайта днес.</p>
+    {% else %}
+        <ul>
+            {% for challenge in today_challenges %}
+                <li><strong>{{ challenge.path.name }}:</strong> {{ challenge.quest.title }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <p>
+        <a href="{{ path('admin_quest_new') }}">Нов куест</a>
+        · <a href="{{ path('admin_daily_challenges_index') }}">Следващите 7 дни</a>
+    </p>
+{% endblock %}

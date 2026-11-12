@@ -30,9 +30,9 @@ composer: ## Run a Composer command: make composer c="require foo/bar"
 css: ## Rebuild Tailwind CSS on every change (Ctrl+C to stop)
 	$(EXEC) bin/console tailwind:build --watch
 
-db: ## Run migrations and load example data
+db: ## Run migrations and reload example data (admin accounts are kept)
 	$(EXEC) bin/console doctrine:migrations:migrate --no-interaction
-	$(EXEC) bin/console doctrine:fixtures:load --no-interaction
+	$(EXEC) bin/console doctrine:fixtures:load --no-interaction --purge-exclusions=users
 
 test: ## Run the PHPUnit tests
 	$(EXEC) bin/phpunit

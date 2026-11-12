@@ -1,0 +1,26 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Подредба на пътеките{% endblock %}
+
+{% block main %}
+    <p>Хванете пътеката за дръжката <span class="fa fa-grip-vertical"></span> и я преместете, или използвайте стрелките. Подредбата се запазва веднага и е същата на сайта.</p>
+
+    <div data-controller="sortable-list"
+         data-sortable-list-url-value="{{ path('admin_path_sort_save') }}"
+         data-sortable-list-token-value="{{ csrf_token('path-sort') }}">
+        <ul class="sortable-list ea-not-prose" data-sortable-list-target="list">
+            {% for path in paths %}
+                <li data-id="{{ path.id }}">
+                    <span data-handle class="fa fa-grip-vertical" aria-hidden="true"></span>
+                    <span class="swatch" style="background: {{ path.color }}"></span>
+                    <span class="name">{{ path.name }}</span>
+                    <twig:ea:Button type="button" variant="ghost" size="sm" icon="fa fa-arrow-up" data-action="sortable-list#up" aria-label="Нагоре: {{ path.name }}"/>
+                    <twig:ea:Button type="button" variant="ghost" size="sm" icon="fa fa-arrow-down" data-action="sortable-list#down" aria-label="Надолу: {{ path.name }}"/>
+                </li>
+            {% endfor %}
+        </ul>
+        <p class="sortable-status" data-sortable-list-target="status" role="status" aria-live="polite"></p>
+    </div>
+
+    <p><a href="{{ path('admin_path_index') }}">← Обратно към пътеките</a></p>
+{% endblock %}
