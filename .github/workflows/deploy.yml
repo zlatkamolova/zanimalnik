@@ -1,0 +1,156 @@
+# Tests on every push; on "main" (once DEPLOY_ENABLED is set) the site is built and uploaded to
+# SuperHosting over FTP. The hosting has no SSH/Composer/Node: everything is built here, and the
+# server finishes the job from cron (app:post-deploy, triggered by var/deploy.flag).
+#
+# Repository → Settings → Secrets and variables → Actions
+#   Secrets:   FTP_SERVER, FTP_USERNAME, FTP_PASSWORD
+#   Variables: DEPLOY_ENABLED = true            (deploys stay off until you set it)
+#              FTP_PROTOCOL   = ftps (default) or ftp
+#              FTP_PROJECT_DIR = zanimalnik/     (code, outside the web root)
+#              FTP_PUBLIC_DIR  = public_html/    (web root)
+#   The two dirs are relative to where the FTP account lands (for the main cPanel account: /home/zaniskyu).
+
+name: Tests and deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PHP_VERSION: '8.5'
+  PHP_EXTENSIONS: intl, pdo_mysql, gd, zip, mbstring
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: zanimalnik_test
+          MARIADB_USER: zanimalnik
+          MARIADB_PASSWORD: zanimalnik
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    env:
+      # the test environment adds the "_test" suffix → zanimalnik_test
+      DATABASE_URL: mysql://zanimalnik:zanimalnik@127.0.0.1:3306/zanimalnik?serverVersion=10.11.19-MariaDB&charset=utf8mb4
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Composer cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - run: composer install --no-progress --no-interaction
+      - run: php bin/console importmap:install
+      - run: php bin/console tailwind:build
+      - run: php bin/console doctrine:migrations:migrate --no-interaction --env=test
+      - run: php bin/phpunit
+
+  deploy:
+    name: Build and upload to SuperHosting
+    needs: test
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      APP_ENV: prod
+      APP_DEBUG: '0'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Install production dependencies
+        # also runs assets:install (EasyAdmin files → public_html/bundles) and importmap:install
+        run: composer install --no-dev --optimize-autoloader --no-progress --no-interaction
+
+      - name: Build CSS and compile assets
+        run: |
+          php bin/console tailwind:build --minify
+          php bin/console asset-map:compile
+          test -f public_html/assets/manifest.json
+          test -d public_html/bundles/easyadmin
+
+      - name: Prepare the deploy flag
+        run: |
+          mkdir -p deploy-flag
+          echo "${{ github.sha }} $(date -u +%Y-%m-%dT%H:%M:%SZ)" > deploy-flag/deploy.flag
+
+      - name: Upload code (outside the web root)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          local-dir: ./
+          server-dir: ${{ vars.FTP_PROJECT_DIR || 'zanimalnik/' }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            .idea/**
+            .phpunit.cache/**
+            deploy-flag/**
+            docker/**
+            docs/**
+            public_html/**
+            tests/**
+            var/**
+            .env.local
+            .env.*.local
+            .env.dev
+            .env.test
+            compose.yaml
+            Makefile
+            phpunit.dist.xml
+
+      - name: Upload the web root (front controller, compiled assets)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          local-dir: ./public_html/
+          server-dir: ${{ vars.FTP_PUBLIC_DIR || 'public_html/' }}
+          # uploads/ holds the admin's PDFs and covers — never touched by a deploy
+          exclude: |
+            uploads/**
+
+      - name: Upload the deploy flag (always last)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          local-dir: ./deploy-flag/
+          server-dir: ${{ vars.FTP_PROJECT_DIR || 'zanimalnik/' }}var/
+          state-name: .ftp-deploy-flag-state.json

@@ -43,7 +43,7 @@ final class AdminQuestUploadTest extends WebDatabaseTestCase
 
     private function pdf(): UploadedFile
     {
-        copy(\dirname(__DIR__, 2).'/src/DataFixtures/files/mnogolikata-duma.pdf', $file = $this->tmp.'/list.pdf');
+        copy(\dirname(__DIR__, 2).'/resources/seed/mnogolikata-duma.pdf', $file = $this->tmp.'/list.pdf');
 
         return new UploadedFile($file, 'list.pdf', 'application/pdf', null, true);
     }

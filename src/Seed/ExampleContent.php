@@ -1,22 +1,52 @@
 <?php
 
-namespace App\DataFixtures;
-
-use App\Entity\Path;
-use App\Entity\Quest;
-use App\Entity\Tag;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Filesystem\Filesystem;
+namespace App\Seed;
 
 /**
- * 8 example quests (2 per path) + 1 draft. Texts are placeholders to be edited in the admin.
+ * The starting content of the site: used by the dev fixtures (`make db`) and, once,
+ * by `app:seed` on the first production deploy. Edit texts in the admin afterwards —
+ * changing this file does not touch an existing database.
  */
-final class QuestFixtures extends Fixture implements DependentFixtureInterface
+final class ExampleContent
 {
-    private const TAGS = [
+    public const PATHS = [
+        'vzor' => [
+            'name' => 'Взор',
+            'symbol' => 'eye',
+            'color' => '#2f6f73',
+            'description' => 'Пътеката на погледа. Тук се учим да забелязваме: дребното, скритото, онова, покрай което минаваме всеки ден. Внимание, ориентация и концентрация — често с фотоапарат в ръка.',
+        ],
+        'slovo' => [
+            'name' => 'Слово',
+            'symbol' => 'quill',
+            'color' => '#8a3b12',
+            'description' => 'Пътеката на думите. Значения, които се крият една в друга, думи с много лица и онова, което остава неизказано. За хора, които обичат да слушат и да подбират.',
+        ],
+        'orakul' => [
+            'name' => 'Оракул',
+            'symbol' => 'moon',
+            'color' => '#4b3a7a',
+            'description' => 'Пътеката на предчувствието. Първо прогноза, после действие, накрая сравнение: колко добре познаваш света и себе си? Тук интуицията се тренира като мускул.',
+        ],
+        'krivite-pateki' => [
+            'name' => 'Кривите пътеки',
+            'symbol' => 'spiral',
+            'color' => '#5b6b2a',
+            'description' => 'Пътеката на заобикалянето. Нови маршрути, странни ограничения и обичайни неща, направени по необичаен начин. Нестандартното мислене започва от една крачка встрани.',
+        ],
+    ];
+
+    public const SIGN_ROLES = ['Пазителят', 'Скитникът', 'Тълкувателят'];
+
+    public const ABOUT_TITLE = 'За Занималника';
+
+    public const ABOUT_BODY = <<<'HTML'
+        <p>Занималникът е място за малки приключения в обикновените дни. Тук няма екрани, точки и класации — има куестове: игриви задачи, които се изпълняват навън, вкъщи, по пътя до работа или училище.</p>
+        <p>Куестовете са подредени в четири пътеки. <strong>Взор</strong> тренира погледа, <strong>Слово</strong> — усета за думите, <strong>Оракул</strong> — интуицията, а <strong>Кривите пътеки</strong> — смелостта да опиташ по друг начин.</p>
+        <p>Всеки ден по една задача от всяка пътека става предизвикателство на деня. А знакът на деня ти подсказва цвят и число — просто така, за настроение.</p>
+        HTML;
+
+    public const TAGS = [
         'navan' => 'навън',
         'vkashti' => 'вкъщи',
         'sam' => 'сам',
@@ -26,7 +56,7 @@ final class QuestFixtures extends Fixture implements DependentFixtureInterface
         's-tefter' => 'с тефтер',
     ];
 
-    private const QUESTS = [
+    public const QUESTS = [
         [
             'slug' => 'sedem-zhalti-neshta',
             'path' => 'vzor',
@@ -212,74 +242,4 @@ final class QuestFixtures extends Fixture implements DependentFixtureInterface
                 HTML,
         ],
     ];
-
-    public function __construct(
-        #[Autowire('%app.quest_pdf_dir%')] private readonly string $pdfDir,
-        private readonly Filesystem $filesystem = new Filesystem(),
-    ) {
-    }
-
-    public function getDependencies(): array
-    {
-        return [PathFixtures::class];
-    }
-
-    public function load(ObjectManager $manager): void
-    {
-        $tags = [];
-        foreach (self::TAGS as $slug => $name) {
-            $manager->persist($tags[$slug] = (new Tag())->setName($name)->setSlug($slug));
-        }
-
-        $now = new \DateTimeImmutable('today 09:00');
-
-        foreach (self::QUESTS as $data) {
-            $quest = (new Quest())
-                ->setPath($this->getReference('path-'.$data['path'], Path::class))
-                ->setTitle($data['title'])
-                ->setSlug($data['slug'])
-                ->setSummary($data['summary'])
-                ->setBody(trim($data['body']))
-                ->setDifficulty($data['difficulty'])
-                ->setDuration($data['duration'])
-                ->setMaterials($data['materials'])
-                ->setIsPublished(true)
-                ->setIsDailyEligible(true)
-                ->setPublishedAt($now->modify(\sprintf('-%d days', $data['days_ago'])));
-
-            foreach ($data['extra_paths'] ?? [] as $extra) {
-                $quest->addAdditionalPath($this->getReference('path-'.$extra, Path::class));
-            }
-            foreach ($data['tags'] as $tag) {
-                $quest->addTag($tags[$tag]);
-            }
-            if (isset($data['pdf'])) {
-                $quest->setPdfPath($this->copyPdf($data['pdf']));
-            }
-
-            $manager->persist($quest);
-        }
-
-        // A draft: must never be visible on the public site
-        $manager->persist((new Quest())
-            ->setPath($this->getReference('path-slovo', Path::class))
-            ->setTitle('Шепотът на стълбището')
-            ->setSlug('shepotat-na-stalbishteto')
-            ->setSummary('Чернова: какво разказват звуците на една обикновена сграда.')
-            ->setBody('<p>Текстът предстои.</p>')
-            ->setDifficulty(2)
-            ->setDuration('една вечер')
-            ->setIsPublished(false)
-            ->setIsDailyEligible(true));
-
-        $manager->flush();
-    }
-
-    /** Copies a sample PDF into the uploads folder and returns the stored file name. */
-    private function copyPdf(string $file): string
-    {
-        $this->filesystem->copy(__DIR__.'/files/'.$file, $this->pdfDir.'/'.$file, true);
-
-        return $file;
-    }
 }

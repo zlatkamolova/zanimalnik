@@ -29,7 +29,7 @@ final class DailyPickCommandTest extends DatabaseTestCase
         $tester->execute(['--date' => '2026-12-01', '--days' => '14'], ['interactive' => false]);
 
         self::assertSame(Command::SUCCESS, $tester->getStatusCode());
-        self::assertStringContainsString('Готово: 56 предизвикателства', $tester->getDisplay());
+        self::assertSame('', trim($tester->getDisplay()), 'silent from cron, so cPanel sends no e-mail');
 
         $this->em->clear();
         $all = self::getContainer()->get(DailyChallengeRepository::class)->findAll();
@@ -48,6 +48,18 @@ final class DailyPickCommandTest extends DatabaseTestCase
         $tester->execute(['--date' => '2026-12-01', '--days' => '14'], ['interactive' => false]);
         $this->em->clear();
         self::assertSame(56, self::getContainer()->get(DailyChallengeRepository::class)->count([]));
+    }
+
+    public function testReportsWhenRunByHand(): void
+    {
+        $path = $this->createPath('Взор');
+        $this->createQuest($path, 'Един');
+        $this->em->flush();
+
+        $tester = $this->tester();
+        $tester->execute(['--date' => '2026-12-01'], ['interactive' => true]);
+
+        self::assertStringContainsString('Готово: 1 предизвикателства.', $tester->getDisplay());
     }
 
     public function testRejectsInvalidDate(): void

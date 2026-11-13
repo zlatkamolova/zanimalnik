@@ -35,6 +35,7 @@ db: ## Run migrations and reload example data (admin accounts are kept)
 	$(EXEC) bin/console doctrine:fixtures:load --no-interaction --purge-exclusions=users
 
 test: ## Run the PHPUnit tests (uses the separate zanimalnik_test database)
+	$(EXEC) rm -rf var/cache/test
 	$(EXEC) bin/console doctrine:migrations:migrate --no-interaction --env=test -q
 	$(EXEC) bin/phpunit
 

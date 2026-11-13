@@ -70,10 +70,11 @@ final class DailyPickCommand extends Command
             return Command::SUCCESS;
         }
 
-        if ($output->isVerbose() || $days > 1 || $input->isInteractive()) {
+        // From cron (non-interactive) stay silent on success: cPanel e-mails every line of output.
+        if ($output->isVerbose() || $input->isInteractive()) {
             $io->table(['Ден', 'Пътека', 'Куест', 'Избор'], $rows);
+            $io->success(\sprintf('Готово: %d предизвикателства.', \count($rows)));
         }
-        $io->success(\sprintf('Готово: %d предизвикателства.', \count($rows)));
 
         return Command::SUCCESS;
     }
