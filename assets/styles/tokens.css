@@ -1,0 +1,59 @@
+/* ------------------------------------------------------------------ */
+/* Design tokens. Light = parchment, dark = "нощен пергамент".         */
+/* Every text/background pair here is checked for WCAG AA (≥ 4.5:1);  */
+/* --control is for form-field borders (≥ 3:1).                        */
+/* ------------------------------------------------------------------ */
+:root {
+    color-scheme: light dark;
+
+    --parchment: #f3e9d2;        /* page */
+    --parchment-deep: #e7d8b6;   /* panels, tiles */
+    --paper: #f8f1e0;            /* scrolls and cards */
+    --ink: #2b2118;
+    --ink-soft: #5a4a3a;
+    --rule: #b89f74;             /* decorative lines only */
+    --control: #86704b;          /* borders of inputs and selects */
+    --accent: #8a3b12;
+    --focus: #1f5fd1;
+    --wood-dark: #4a3420;
+    --wood-light: #a27a4f;
+    --shadow: 0 1px 0 rgb(255 255 255 / .6) inset, 0 10px 24px -14px rgb(60 40 15 / .45);
+
+    /* fine paper grain + large soft mottling (tiny inline SVGs, no image files) */
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .22 0 0 0 0 .1 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    --mottle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .32 0 0 0 0 .15 0 0 0 .16 -.03'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --parchment: #1c1813;
+        --parchment-deep: #262019;
+        --paper: #221d17;
+        --ink: #efe4cc;
+        --ink-soft: #c7b89c;
+        --rule: #5f4f37;
+        --control: #97835f;
+        --accent: #e0915c;
+        --focus: #8ab4ff;
+        --wood-dark: #120d08;
+        --wood-light: #5a4330;
+        --shadow: 0 1px 0 rgb(255 255 255 / .04) inset, 0 12px 28px -14px rgb(0 0 0 / .7);
+
+        --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .95 0 0 0 0 .85 0 0 0 0 .65 0 0 0 .045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        --mottle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .42 0 0 0 0 .25 0 0 0 .06 -.02'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+    }
+}
+
+@theme {
+    --font-serif: "Cormorant Garamond", "Old Standard TT", Georgia, serif;
+    --font-sans: "Manrope", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+    --color-parchment: var(--parchment);
+    --color-parchment-deep: var(--parchment-deep);
+    --color-paper: var(--paper);
+    --color-ink: var(--ink);
+    --color-ink-soft: var(--ink-soft);
+    --color-rule: var(--rule);
+    --color-accent: var(--accent);
+}

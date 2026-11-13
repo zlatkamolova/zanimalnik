@@ -1,0 +1,287 @@
+/* ------------------------------------------------------------------ */
+/* Components. Archaic layer: seals, scrolls, frames, ornaments.       */
+/* Modern layer: navigation, buttons, filters — flat, quick, clear.    */
+/* ------------------------------------------------------------------ */
+@layer components {
+    .skip-link {
+        position: absolute; left: 1rem; top: -4rem; z-index: 50;
+        background: var(--ink); color: var(--parchment); padding: .6rem 1rem; border-radius: .5rem; font-weight: 700;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    .sr-only:not(:focus):not(:active) {
+        position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+        overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+
+    /* ---------------- header & navigation (modern) ---------------- */
+    .site-header {
+        position: sticky; top: 0; z-index: 30;
+        background: color-mix(in srgb, var(--parchment) 88%, transparent);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--rule);
+    }
+    .site-logo {
+        display: inline-flex; align-items: center; gap: .6rem;
+        font-family: var(--font-serif); font-size: 1.7rem; font-weight: 700; letter-spacing: .01em;
+        color: var(--ink); text-decoration: none;
+    }
+    .site-logo-mark {
+        display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 50%;
+        background: var(--accent); color: var(--paper);
+        font-size: 1.25rem; line-height: 1; box-shadow: inset 0 0 0 2px rgb(0 0 0 / .18), inset 0 0 0 4px rgb(255 255 255 / .18);
+    }
+    .menu-toggle {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 44px; height: 44px; border-radius: .6rem; color: var(--ink);
+    }
+    .menu-toggle:hover { background: var(--parchment-deep); }
+    .menu-toggle[aria-expanded="true"] { background: var(--ink); color: var(--parchment); }
+
+    .site-nav ul { display: flex; gap: .15rem; list-style: none; margin: 0; padding: 0; }
+    .site-nav a {
+        display: block; padding: .5rem .75rem; border-radius: .55rem;
+        color: var(--ink); text-decoration: none; font-weight: 650; font-size: .95rem;
+        transition: background-color .12s ease, color .12s ease;
+    }
+    .site-nav a:hover { background: var(--parchment-deep); }
+    .site-nav a[aria-current="page"] { background: var(--ink); color: var(--parchment); }
+
+    @media (max-width: 767px) {
+        .site-nav {
+            display: none; position: absolute; left: 0; right: 0; top: 100%;
+            background: var(--parchment); border-bottom: 1px solid var(--rule);
+            padding: .5rem 1rem 1rem; box-shadow: 0 16px 30px -10px rgb(0 0 0 / .25);
+        }
+        .site-nav.is-open { display: block; animation: nav-in .15s ease-out; }
+        .site-nav ul { flex-direction: column; gap: .25rem; }
+        .site-nav a { padding: .8rem .9rem; font-size: 1.05rem; }
+    }
+    @keyframes nav-in { from { opacity: 0; transform: translateY(-6px); } }
+
+    .site-footer { color: var(--ink-soft); margin-top: 3rem; }
+
+    /* ---------------- typography ---------------- */
+    .eyebrow {
+        font-size: .78rem; letter-spacing: .22em; text-transform: uppercase;
+        color: var(--ink-soft); font-weight: 700;
+    }
+    .hero-title {
+        font-size: clamp(3rem, 11vw, 5.75rem); font-weight: 700; margin-top: .25rem; letter-spacing: .005em;
+    }
+    .hero-flourish { display: block; width: min(22rem, 70%); margin: .5rem auto 0; color: var(--accent); }
+    .hero-lead, .page-lead {
+        font-size: 1.15rem; color: var(--ink-soft); margin-top: .9rem; max-width: 40rem; margin-inline: auto; line-height: 1.6;
+    }
+    .page-title { font-size: clamp(2.3rem, 6.5vw, 3.75rem); font-weight: 700; }
+    .section-title { font-size: clamp(1.8rem, 4.5vw, 2.4rem); text-align: center; margin-top: .75rem; }
+    .section-lead { text-align: center; color: var(--ink-soft); margin-top: .25rem; }
+    .empty-note { text-align: center; color: var(--ink-soft); margin-top: 1.5rem; font-style: italic; }
+
+    /* ---------------- ornament ---------------- */
+    .ornament { display: flex; align-items: center; gap: .8rem; color: var(--rule); }
+    .ornament-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, currentColor 20%, currentColor 80%, transparent); }
+    .ornament svg { flex: none; }
+
+    /* ---------------- buttons (modern) ---------------- */
+    .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 44px;
+        padding: .7rem 1.25rem; border-radius: .7rem; border: 2px solid var(--ink);
+        background: var(--ink); color: var(--paper); font-weight: 750; text-decoration: none;
+        transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 14px -6px rgb(0 0 0 / .45); text-decoration: none; }
+    .btn:active { transform: none; }
+    .btn-outline { background: transparent; color: var(--ink); }
+    .btn-link {
+        background: none; border: 0; color: var(--accent); font-weight: 700;
+        text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: .5rem 0; min-height: 44px;
+    }
+
+    /* ---------------- seals ---------------- */
+    .seal { display: inline-block; flex: none; filter: drop-shadow(0 2px 2px rgb(40 20 0 / .35)); }
+
+    /* ---------------- path tiles: framed parchment with a seal ---------------- */
+    .path-grid { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); margin-top: 1.75rem; list-style: none; padding: 0; }
+    .path-tile {
+        position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: .55rem; height: 100%;
+        padding: 1.75rem 1.25rem 1.5rem;
+        background: var(--paper) var(--grain); color: var(--ink); text-decoration: none;
+        border: 1px solid var(--rule); border-radius: .35rem;
+        outline: 1px solid var(--rule); outline-offset: -7px;
+        box-shadow: var(--shadow);
+        transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .path-tile:hover { transform: translateY(-3px); box-shadow: var(--shadow), 0 18px 30px -18px rgb(60 40 15 / .6); }
+    .path-tile:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+    .path-tile::after { /* the path colour as a thin band under the seal */
+        content: ""; position: absolute; top: 0; left: 50%; translate: -50% 0; width: 3.5rem; height: 4px;
+        background: var(--path); border-radius: 0 0 3px 3px;
+    }
+    .path-tile-name { font-family: var(--font-serif); font-size: 1.75rem; font-weight: 700; margin-top: .25rem; }
+    .path-tile-text { color: var(--ink-soft); font-size: .95rem; line-height: 1.55; }
+
+    .other-paths { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; list-style: none; padding: 0; }
+    .other-paths a {
+        display: inline-flex; align-items: center; gap: .55rem; min-height: 44px;
+        padding: .35rem 1rem .35rem .4rem; border: 1px solid var(--rule); border-radius: 999px;
+        background: var(--paper); color: var(--ink); text-decoration: none; font-weight: 650;
+    }
+    .other-paths a:hover { border-color: var(--control); }
+
+    /* ---------------- quest cards: small scrolls ---------------- */
+    .card-grid {
+        display: grid; gap: 2rem 1.5rem; grid-template-columns: repeat(auto-fit, minmax(17rem, 23rem));
+        justify-content: center; /* a path with two quests stays centred */
+        margin-top: 2rem; list-style: none; padding: 0;
+    }
+    .card-grid.is-loading { opacity: .5; transition: opacity .15s; }
+    .card-grid-4 { grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); justify-content: stretch; }
+    .quest-card {
+        position: relative; display: flex; flex-direction: column; height: 100%;
+        margin-block: 7px; /* room for the rods */
+        background: var(--paper) var(--grain);
+        border-inline: 1px solid color-mix(in srgb, var(--rule) 70%, transparent);
+        box-shadow: var(--shadow);
+        transition: transform .15s ease;
+    }
+    /* the two wooden rods of the scroll, tinted with the path colour */
+    .quest-card::before, .quest-card > .scroll-rod {
+        content: ""; position: absolute; left: -7px; right: -7px; height: 13px; border-radius: 7px;
+        background:
+            linear-gradient(to bottom, rgb(255 255 255 / .35), transparent 45%, rgb(0 0 0 / .35)),
+            linear-gradient(to right, var(--wood-dark), color-mix(in srgb, var(--path) 55%, var(--wood-light)) 18%, color-mix(in srgb, var(--path) 55%, var(--wood-light)) 82%, var(--wood-dark));
+        box-shadow: 0 2px 3px rgb(0 0 0 / .25);
+        z-index: 1;
+    }
+    .quest-card::before { top: -7px; }
+    .quest-card > .scroll-rod { bottom: -7px; }
+    .quest-card:hover { transform: translateY(-3px); }
+    .quest-card:focus-within { outline: 3px solid var(--focus); outline-offset: 6px; }
+    .quest-card-cover { aspect-ratio: 16 / 9; object-fit: cover; width: 100%; filter: sepia(.15); }
+    .quest-card-body { display: flex; flex-direction: column; gap: .55rem; padding: 1.25rem 1.25rem 1.4rem; flex: 1; }
+    .quest-card-title { font-size: 1.6rem; font-weight: 700; }
+    .quest-card-title a { color: var(--ink); text-decoration: none; }
+    .quest-card-title a:hover { text-decoration: underline; text-decoration-thickness: 1px; }
+    .stretched-link::after { content: ""; position: absolute; inset: 0; z-index: 2; }
+    .stretched-link:focus-visible { outline: none; }
+    .quest-card-summary { color: var(--ink-soft); flex: 1; line-height: 1.55; }
+    .quest-card-meta {
+        display: flex; flex-wrap: wrap; gap: .4rem; font-size: .85rem; color: var(--ink-soft);
+        padding-top: .6rem; border-top: 1px dashed color-mix(in srgb, var(--rule) 70%, transparent);
+    }
+    .quest-card-paths { display: flex; flex-wrap: wrap; gap: .35rem; }
+
+    .path-chip {
+        display: inline-flex; align-items: center; gap: .35rem;
+        font-size: .72rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+        color: var(--ink); text-decoration: none;
+        padding: .18rem .6rem; border-radius: 999px;
+        background: color-mix(in srgb, var(--path) 18%, var(--paper));
+        border: 1px solid color-mix(in srgb, var(--path) 55%, transparent);
+    }
+    a.path-chip { min-height: 32px; }
+    a.path-chip:hover { background: color-mix(in srgb, var(--path) 28%, var(--paper)); }
+    .quest-paths { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .quest-paths .path-chip { font-size: .8rem; padding: .2rem .8rem .2rem .25rem; }
+
+    .difficulty { display: inline-flex; align-items: center; gap: .35rem; }
+    .difficulty-dot { display: inline-block; width: .55rem; height: .55rem; border-radius: 50%; border: 1.5px solid currentColor; margin-right: 2px; }
+    .difficulty-dot.is-on { background: currentColor; }
+
+    /* ---------------- filters (modern) ---------------- */
+    .filters {
+        display: flex; flex-wrap: wrap; align-items: end; gap: .9rem 1rem;
+        padding: 1.1rem; border-radius: 1rem;
+        background: var(--paper); border: 1px solid var(--rule);
+    }
+    .filter { display: flex; flex-direction: column; gap: .35rem; min-width: 11rem; flex: 1; }
+    .filter label { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); }
+    .filter select {
+        appearance: none; font: inherit; color: var(--ink); background-color: var(--parchment);
+        border: 1.5px solid var(--control); border-radius: .65rem; padding: .65rem 2.4rem .65rem .8rem; min-height: 44px;
+        background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+        background-position: calc(100% - 19px) 55%, calc(100% - 14px) 55%;
+        background-size: 5px 5px; background-repeat: no-repeat;
+        cursor: pointer;
+    }
+    .filter select:hover { border-color: var(--ink); }
+    .results-count { margin-top: 1.1rem; color: var(--ink-soft); font-weight: 700; }
+
+    /* ---------------- quest page: an unrolled scroll ---------------- */
+    .quest-header .page-lead { margin-inline: 0; }
+
+    .quest-facts {
+        display: flex; flex-wrap: wrap; gap: 1rem 2.25rem; margin-top: 1.5rem;
+        padding: .9rem 1.1rem; border-block: 1px solid var(--rule);
+    }
+    .quest-facts dt { font-size: .74rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-soft); }
+    .quest-facts dd { margin: .2rem 0 0; font-weight: 650; }
+    .quest-cover { width: 100%; border-radius: .35rem; border: 1px solid var(--rule); box-shadow: var(--shadow); filter: sepia(.1); }
+
+    .scroll-sheet {
+        position: relative; margin-top: 1.5rem;
+        padding: clamp(1.5rem, 5vw, 3rem) clamp(1.1rem, 5vw, 3.25rem);
+        background: var(--paper) var(--grain);
+        border-inline: 1px solid color-mix(in srgb, var(--rule) 70%, transparent);
+        box-shadow: var(--shadow);
+    }
+    .scroll-sheet::before, .scroll-sheet::after {
+        content: ""; position: absolute; left: -12px; right: -12px; height: 20px; border-radius: 10px;
+        background:
+            linear-gradient(to bottom, rgb(255 255 255 / .35), transparent 45%, rgb(0 0 0 / .4)),
+            linear-gradient(to right, var(--wood-dark), color-mix(in srgb, var(--path, var(--accent)) 50%, var(--wood-light)) 12%, color-mix(in srgb, var(--path, var(--accent)) 50%, var(--wood-light)) 88%, var(--wood-dark));
+        box-shadow: 0 3px 5px rgb(0 0 0 / .3);
+    }
+    .scroll-sheet::before { top: -10px; }
+    .scroll-sheet::after { bottom: -10px; }
+
+    .prose-quest { font-size: 1.1rem; line-height: 1.75; }
+    .prose-quest > * + * { margin-top: 1rem; clear: both; } /* nothing squeezes beside the drop cap */
+    .prose-quest > p:first-child::first-letter {
+        float: left; font-family: var(--font-serif); font-weight: 700;
+        font-size: 3.6em; line-height: .82; margin: .08em .1em 0 0;
+        color: color-mix(in srgb, var(--path, var(--accent)) 70%, var(--ink));
+    }
+    .prose-quest h2, .prose-quest h3 { font-size: 1.7rem; margin-top: 2.1rem; }
+    .prose-quest h2 + *, .prose-quest h3 + * { margin-top: .6rem; }
+    .prose-quest ul { list-style: none; padding-left: 1.4rem; }
+    .prose-quest ul > li { position: relative; }
+    .prose-quest ul > li::before { content: "❧"; position: absolute; left: -1.3rem; color: var(--path, var(--accent)); font-size: .95em; }
+    .prose-quest ol { list-style: decimal; padding-left: 1.5rem; }
+    .prose-quest ol > li::marker { font-family: var(--font-serif); font-weight: 700; color: color-mix(in srgb, var(--path, var(--accent)) 70%, var(--ink)); }
+    .prose-quest li + li { margin-top: .4rem; }
+    .prose-quest blockquote { border-left: 3px solid var(--path, var(--accent)); padding-left: 1rem; font-style: italic; color: var(--ink-soft); }
+
+    .quest-sheet {
+        margin-top: 2.5rem; padding: 1.4rem;
+        border: 1px solid var(--rule); border-radius: 1rem; background: var(--parchment);
+    }
+    .sheet-title { font-size: 1.7rem; }
+    .quest-sheet > * + * { margin-top: .8rem; }
+    .pdf-preview summary {
+        display: inline-flex; align-items: center; gap: .5rem; min-height: 44px;
+        cursor: pointer; font-weight: 750; list-style: none;
+    }
+    .pdf-preview summary::-webkit-details-marker { display: none; }
+    .pdf-preview summary::before { content: "▸"; transition: rotate .15s ease; }
+    .pdf-preview[open] summary::before { rotate: 90deg; }
+    .pdf-preview object { display: block; border: 1px solid var(--rule); border-radius: .5rem; background: #fff; max-height: 80vh; margin-top: .5rem; }
+    /* fallback text sits on the white PDF frame in both colour schemes */
+    .pdf-preview object > p { color: #2b2118; padding: 1rem; }
+    .pdf-preview object a { color: #8a3b12; }
+
+    .quest-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 2rem; }
+    .tag {
+        display: inline-flex; align-items: center; min-height: 36px;
+        font-size: .9rem; font-weight: 650; text-decoration: none;
+        padding: .2rem .7rem; border-radius: .45rem; background: var(--parchment-deep); color: var(--ink);
+    }
+    .tag:hover { background: color-mix(in srgb, var(--accent) 15%, var(--parchment-deep)); }
+
+    .error-code { font-family: var(--font-mono); font-size: 4.5rem; font-weight: 800; color: var(--accent); line-height: 1; }
+
+    @media (prefers-reduced-motion: reduce) {
+        .quest-card:hover, .path-tile:hover, .btn:hover { transform: none; }
+    }
+}

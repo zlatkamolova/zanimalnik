@@ -5,6 +5,11 @@
         <div class="mx-auto max-w-4xl px-4 pt-12 pb-8 text-center">
             <p class="eyebrow">Куестове от реалния живот</p>
             <h1 class="hero-title">Занималник</h1>
+            <svg class="hero-flourish" viewBox="0 0 360 28" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+                <path d="M4 14h120c14 0 18-9 30-9 8 0 12 5 12 9s-4 9-12 9c-12 0-16-9-30-9"/>
+                <path d="M356 14H236c-14 0-18-9-30-9-8 0-12 5-12 9s4 9 12 9c12 0 16-9 30-9"/>
+                <path d="M180 4l9 10-9 10-9-10z"/><circle cx="180" cy="14" r="2.2" fill="currentColor" stroke="none"/>
+            </svg>
             <p class="hero-lead">
                 Малки приключения за обикновените дни. Тренират погледа, думите, предчувствието и смелостта да тръгнеш по друг път.
             </p>
@@ -18,7 +23,7 @@
             <twig:Ornament/>
             <h2 id="daily-title" class="section-title">Предизвикателства на деня</h2>
             <p class="section-lead">{{ 'now'|format_date(pattern: "EEEE, d MMMM", locale: 'bg')|capitalize }} — по едно за всяка пътека.</p>
-            <ul class="card-grid" role="list">
+            <ul class="card-grid card-grid-4" role="list">
                 {% for challenge in daily %}
                     <li><twig:QuestCard :quest="challenge.quest"/></li>
                 {% endfor %}

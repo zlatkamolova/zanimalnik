@@ -7,8 +7,10 @@
     <article class="mx-auto max-w-3xl px-4 py-12">
         <h1 class="page-title text-center">{{ title }}</h1>
         <twig:Ornament class="my-6"/>
-        <div class="prose-quest">
-            {{ body|sanitize_html('app.rich_text') }}
+        <div class="scroll-sheet">
+            <div class="prose-quest">
+                {{ body|sanitize_html('app.rich_text') }}
+            </div>
         </div>
     </article>
 {% endblock %}

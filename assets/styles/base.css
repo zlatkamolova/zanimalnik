@@ -1,0 +1,41 @@
+@layer base {
+    html {
+        font-family: var(--font-sans);
+        background-color: var(--parchment);
+        color: var(--ink);
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        /* parchment: grain + mottling + a soft darkening towards the edges */
+        background-image:
+            var(--grain),
+            var(--mottle),
+            radial-gradient(ellipse at 50% 0%, transparent 55%, rgb(90 60 20 / .10) 100%);
+        background-color: var(--parchment);
+    }
+
+    h1, h2, h3, h4 {
+        font-family: var(--font-serif);
+        font-weight: 600;
+        line-height: 1.15;
+        text-wrap: balance;
+    }
+
+    p { text-wrap: pretty; }
+
+    a { color: var(--accent); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+    a:hover { text-decoration-thickness: 2px; }
+
+    :focus-visible {
+        outline: 3px solid var(--focus);
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
+
+    ::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { transition-duration: 0s !important; scroll-behavior: auto !important; }
+    }
+}

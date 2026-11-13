@@ -57,7 +57,7 @@ final class SettingCrudController extends AbstractCrudController
                 ->setNumOfRows(14)
                 ->setTrixEditorConfig(['blockAttributes' => [
                     'default' => ['tagName' => 'p'],
-                    'heading1' => ['tagName' => 'h3'],
+                    'heading1' => ['tagName' => 'h2'],
                 ]]);
         } else {
             yield TextField::new('value', $setting?->getLabel() ?? 'Стойност');

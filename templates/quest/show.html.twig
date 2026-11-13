@@ -11,7 +11,7 @@
 {% block body %}
     {% set pdf = quest_pdf_url(quest) %}
     <article class="quest" style="--path: {{ quest.path.color }}">
-        <header class="mx-auto max-w-3xl px-4 pt-10 pb-6">
+        <header class="quest-header mx-auto max-w-3xl px-4 pt-10 pb-6">
             <nav aria-label="Пътеки на куеста" class="quest-paths">
                 {% for p in quest.allPaths %}
                     <a href="{{ path('app_path', {slug: p.slug}) }}" class="path-chip" style="--path: {{ p.color }}">
@@ -39,9 +39,10 @@
         {% endif %}
 
         <div class="mx-auto max-w-3xl px-4 py-6">
-            <twig:Ornament/>
-            <div class="prose-quest">
-                {{ quest.body|sanitize_html('app.rich_text') }}
+            <div class="scroll-sheet">
+                <div class="prose-quest">
+                    {{ quest.body|sanitize_html('app.rich_text') }}
+                </div>
             </div>
 
             {% if pdf %}

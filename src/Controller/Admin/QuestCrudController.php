@@ -108,8 +108,8 @@ final class QuestCrudController extends AbstractCrudController
             ->setTrixEditorConfig([
                 'blockAttributes' => [
                     'default' => ['tagName' => 'p'],
-                    // the editor's "heading" button produces sub-headings inside the quest
-                    'heading1' => ['tagName' => 'h3'],
+                    // the editor's "heading" button produces h2 sub-headings (the page title is the h1)
+                    'heading1' => ['tagName' => 'h2'],
                 ],
             ]);
 
