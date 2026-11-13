@@ -1,0 +1,4 @@
+# Friendlier wording for the admin login (overrides Symfony's own Bulgarian translation)
+'Invalid credentials.': 'Грешен имейл или парола.'
+'Too many failed login attempts, please try again in %minutes% minute.': 'Твърде много неуспешни опити. Опитайте отново след %minutes% минута.'
+'Too many failed login attempts, please try again in %minutes% minutes.': 'Твърде много неуспешни опити. Опитайте отново след %minutes% минути.'

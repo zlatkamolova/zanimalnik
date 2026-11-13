@@ -25,3 +25,8 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+when@test:
+    parameters:
+        # tests never write into the real public_html/uploads
+        app.uploads_dir: '%kernel.project_dir%/var/test-uploads'

@@ -62,8 +62,20 @@ make console c="app:daily-pick --date=2026-12-01 --days=7"
 make test
 ```
 
-Тестовете ползват отделна база `zanimalnik_test` (създава се автоматично при първото стартиране на Docker;
-ако контейнерът с базата е създаден преди тази промяна: `docker compose exec -T db mariadb -uroot -proot < docker/db/init.sql`).
+Тестовете ползват отделна база `zanimalnik_test` и отделна папка за качвания (`var/test-uploads`),
+така че не пипат локалните данни. Базата се създава автоматично при първото стартиране на Docker;
+ако контейнерът с базата е създаден преди това: `docker compose exec -T db mariadb -uroot -proot < docker/db/init.sql`.
+
+| Файл | Какво проверява |
+|---|---|
+| `tests/Unit/DailySignServiceTest.php` | Знакът на деня: еднакъв в рамките на деня, различен на следващия, часова зона на София, нормализиране на името, палитра и контраст, бисквитка |
+| `tests/Integration/DailyPickServiceTest.php`, `DailyPickCommandTest.php` | `app:daily-pick`: по един куест на пътека, без повторение в рамките на 14 дни, ръчният избор се запазва, черновите не се избират |
+| `tests/Functional/AdminAccessTest.php` | Достъп до админа: анонимен → вход, потребител без роля → 403, администратор → всички страници; вход, изход, грешна парола на български |
+| `tests/Functional/AdminQuestUploadTest.php` | Създаване, редакция и публикуване на куест с PDF и корица; грешни файлове и празни полета с български съобщения |
+| `tests/Functional/PublicPagesTest.php` | Всички публични страници, SEO таговете, 404, sitemap, без бисквитки, **без английски текст**, черновата не се вижда |
+| `tests/Functional/LiveComponentsTest.php` | Филтърът на куестовете и знакът на деня през Live Components |
+| `tests/Functional/FixturesTest.php` | Примерните данни: 4 пътеки, 3 роли, ≥ 8 куеста (по 2 на пътека), „Многоликата дума“ с PDF |
+| `tests/Unit/SluggerTest.php`, `ContrastTest.php` | Транслитерация на адресите; контраст на символа върху всеки цвят на печат |
 
 ## Знак на деня
 
