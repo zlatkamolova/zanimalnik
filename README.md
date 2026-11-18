@@ -145,6 +145,7 @@ make console c="app:create-admin you@example.com"
 | `APP_SECRET` | Случаен низ от 32 знака, различен на сървъра |
 | `DATABASE_URL` | `mysql://USER:PASS@HOST:3306/DB?serverVersion=10.11.19-MariaDB&charset=utf8mb4` |
 | `DEFAULT_URI` | Пълен адрес на сайта, ползва се при генериране на линкове от конзолата (sitemap) |
+| `GOATCOUNTER_CODE` | Статистика за посещенията ([GoatCounter](https://zanimalnik.goatcounter.com), без бисквитки). Празно локално и в тестовете; на сървъра `zanimalnik` идва от `.env.prod`. Скриптът е само на публичните страници, не в админа. Преходите през Turbo се броят в `assets/analytics.js` |
 | `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_RESET_PASSWORD` | Само временно на сървъра: създаване на първия администратор или смяна на забравена парола (виж по-долу) |
 
 Локалните стойности са в `.env` / `.env.dev`. Тайните стойности за сървъра стоят само в `.env.local` на сървъра.
