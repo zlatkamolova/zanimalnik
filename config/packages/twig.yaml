@@ -1,5 +1,7 @@
 twig:
     file_name_pattern: '*.twig'
+    globals:
+        goatcounter_code: '%env(GOATCOUNTER_CODE)%'
 
 when@test:
     twig:

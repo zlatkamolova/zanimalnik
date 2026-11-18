@@ -36,6 +36,11 @@
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
+        {# Visitor statistics without cookies (GoatCounter); only when GOATCOUNTER_CODE is set, i.e. on the server.
+           Turbo page changes are counted in assets/analytics.js. #}
+        {% if goatcounter_code %}
+            <script data-goatcounter="https://{{ goatcounter_code|e('html_attr') }}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+        {% endif %}
     </head>
     <body class="flex min-h-screen flex-col antialiased">
         <a href="#main" class="skip-link">Към съдържанието</a>
