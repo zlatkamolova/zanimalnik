@@ -66,6 +66,7 @@ final class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section('Денят');
         yield MenuItem::linkToRoute('Предизвикателства на деня', 'fa fa-calendar-day', 'admin_daily_challenges_index');
+        yield MenuItem::linkTo(JokeCrudController::class, 'Шега, виц, меме на деня', 'fa fa-face-laugh');
         yield MenuItem::linkTo(SignRoleCrudController::class, 'Роли за знака', 'fa fa-mask');
 
         yield MenuItem::section('Сайт');

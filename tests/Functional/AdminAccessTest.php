@@ -21,6 +21,8 @@ final class AdminAccessTest extends WebDatabaseTestCase
         yield 'подредба на пътеките' => ['/admin/path/sort'];
         yield 'тагове' => ['/admin/tag'];
         yield 'роли' => ['/admin/sign-role'];
+        yield 'шеги' => ['/admin/joke'];
+        yield 'нова шега' => ['/admin/joke/new'];
         yield 'текстове' => ['/admin/setting'];
         yield 'предизвикателства' => ['/admin/daily-challenges'];
     }

@@ -2,6 +2,7 @@
 
 namespace App\Seed;
 
+use App\Entity\Joke;
 use App\Entity\Path;
 use App\Entity\Quest;
 use App\Entity\Setting;
@@ -32,7 +33,7 @@ final class ContentSeeder
     }
 
     /**
-     * @param bool $withDraft also add an unpublished example (dev only, to see drafts stay hidden)
+     * @param bool $withDraft dev only: also add an unpublished example (to see drafts stay hidden) and a few jokes of the day
      *
      * @return array<string, int> what was created, e.g. ['пътеки' => 4, …]; empty when the database wasn't empty
      */
@@ -105,6 +106,10 @@ final class ContentSeeder
                 ->setDuration('една вечер')
                 ->setIsPublished(false)
                 ->setIsDailyEligible(true));
+
+            foreach (ExampleContent::JOKES as $data) {
+                $this->em->persist((new Joke())->setType($data['type'])->setText($data['text']));
+            }
         }
 
         $this->em->flush();

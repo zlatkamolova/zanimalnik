@@ -31,6 +31,21 @@
         </section>
     {% endif %}
 
+    {% if joke %}
+        <section class="mx-auto max-w-3xl px-4 py-8" aria-labelledby="joke-title">
+            <twig:Ornament/>
+            <h2 id="joke-title" class="section-title">{{ joke.typeLabel }} на деня</h2>
+            <figure class="joke-note">
+                {% if joke.imagePath %}
+                    <img class="joke-image" src="{{ joke_image_url(joke) }}" alt="{{ joke.imageAlt }}" loading="lazy" decoding="async">
+                {% endif %}
+                {% if joke.text %}
+                    <p class="joke-text">{{ joke.text|nl2br }}</p>
+                {% endif %}
+            </figure>
+        </section>
+    {% endif %}
+
     <section class="mx-auto max-w-6xl px-4 py-8" aria-labelledby="paths-title">
         <twig:Ornament/>
         <h2 id="paths-title" class="section-title">Четирите пътеки</h2>

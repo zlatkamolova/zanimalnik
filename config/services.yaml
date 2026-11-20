@@ -13,6 +13,7 @@ parameters:
     app.uploads_dir: '%app.public_dir%/uploads'
     app.quest_pdf_dir: '%app.uploads_dir%/quests/pdf'
     app.quest_cover_dir: '%app.uploads_dir%/quests/covers'
+    app.joke_image_dir: '%app.uploads_dir%/jokes'
 
 services:
     # default configuration for services in *this* file

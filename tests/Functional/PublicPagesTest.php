@@ -107,6 +107,28 @@ final class PublicPagesTest extends WebDatabaseTestCase
         self::assertCount(4, $crawler->filter('#daily-title')->closest('section')->filter('.quest-card'));
     }
 
+    public function testHomeShowsTheJokeOfTheDay(): void
+    {
+        $crawler = $this->client->request('GET', '/');
+
+        self::assertMatchesRegularExpression('/^(Шега|Виц|Меме) на деня$/u', $crawler->filter('#joke-title')->text());
+        $text = $crawler->filter('.joke-text')->text();
+        self::assertNotSame('', $text);
+
+        // the same one all day
+        self::assertSame($text, $this->client->request('GET', '/')->filter('.joke-text')->text());
+    }
+
+    public function testHomeHasNoJokeSectionWhenThereAreNoJokes(): void
+    {
+        $this->em->createQuery('DELETE FROM App\Entity\Joke')->execute();
+
+        $this->client->request('GET', '/');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorNotExists('#joke-title');
+    }
+
     public function testSitemapAndRobots(): void
     {
         $this->client->request('GET', '/sitemap.xml');
