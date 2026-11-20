@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Catalog\QuestCatalog;
 use App\Entity\Setting;
 use App\Repository\SettingRepository;
+use App\Seed\ExampleContent;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,6 +19,15 @@ final class PageController extends AbstractController
         return $this->render('page/about.html.twig', [
             'title' => $settings->getValue(Setting::ABOUT_TITLE, 'За сайта'),
             'body' => $settings->getValue(Setting::ABOUT_BODY),
+        ]);
+    }
+
+    #[Route('/poveritelnost', name: 'app_privacy', methods: ['GET'])]
+    public function privacy(SettingRepository $settings): Response
+    {
+        return $this->render('page/about.html.twig', [
+            'title' => $settings->getValue(Setting::PRIVACY_TITLE, ExampleContent::PRIVACY_TITLE),
+            'body' => $settings->getValue(Setting::PRIVACY_BODY, trim(ExampleContent::PRIVACY_BODY)),
         ]);
     }
 
@@ -49,6 +59,6 @@ final class PageController extends AbstractController
     {
         $sitemap = $this->generateUrl('app_sitemap', [], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        return new Response("User-agent: *\nDisallow: /admin\n\nSitemap: $sitemap\n", 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
+        return new Response("User-agent: *\nDisallow: /admin\nDisallow: /dnevnik\nDisallow: /profil\n\nSitemap: $sitemap\n", 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
     }
 }

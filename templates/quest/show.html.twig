@@ -64,6 +64,33 @@
                 </section>
             {% endif %}
 
+            <section class="quest-sheet quest-journal" aria-labelledby="journal-title">
+                <h2 id="journal-title" class="sheet-title">Дневник</h2>
+                {% if journal %}
+                    {% import '_form.html.twig' as f %}
+                    {% if journal.count %}
+                        <p>
+                            В <a href="{{ path('app_journal') }}">дневника ти</a> има {{ journal.count }} {{ journal.count == 1 ? 'запис' : 'записа' }} за този куест,
+                            последният е от {{ journal.last.completedOn|format_date(pattern: 'd MMMM y', locale: 'bg') }}.
+                        </p>
+                    {% else %}
+                        <p>Изпълни ли го? Запиши го в <a href="{{ path('app_journal') }}">дневника си</a>.</p>
+                    {% endif %}
+                    {{ form_start(journal.form, {attr: {class: 'journal-form'}}) }}
+                        {{ f.row(journal.form.completedOn) }}
+                        {{ f.row(journal.form.note, 'По желание. Вижда я само ти.') }}
+                        <button type="submit" class="btn">Запиши в дневника</button>
+                    {{ form_end(journal.form) }}
+                {% else %}
+                    {% set here = path('app_quest', {slug: quest.slug}) %}
+                    <p>С профил можеш да записваш изпълнените куестове в личен дневник и да пазиш бележки за тях.</p>
+                    <p>
+                        <a href="{{ path('app_user_login', {kam: here}) }}" class="btn btn-outline">Вход</a>
+                        <a href="{{ path('app_register', {kam: here}) }}" class="btn-link">Регистрация</a>
+                    </p>
+                {% endif %}
+            </section>
+
             {% if quest.tags is not empty %}
                 <p class="quest-tags">
                     <span class="sr-only">Тагове:</span>

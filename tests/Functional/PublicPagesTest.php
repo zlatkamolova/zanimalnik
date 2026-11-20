@@ -21,6 +21,10 @@ final class PublicPagesTest extends WebDatabaseTestCase
         yield 'куест с PDF' => ['/kuest/mnogolikata-duma'];
         yield 'куест на кръстопът' => ['/kuest/nov-pat-kam-vkashti'];
         yield 'за сайта' => ['/za-sajta'];
+        yield 'поверителност' => ['/poveritelnost'];
+        yield 'вход' => ['/vhod'];
+        yield 'регистрация' => ['/registratsiya'];
+        yield 'забравена парола' => ['/zabravena-parola'];
     }
 
     protected function setUp(): void

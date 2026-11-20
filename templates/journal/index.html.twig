@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+{% import '_form.html.twig' as f %}
+
+{% block title %}Моят дневник{% endblock %}
+{% block robots %}<meta name="robots" content="noindex">{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-3xl px-4 py-12">
+        <p class="eyebrow text-center">{{ app.user.displayName ?: app.user.email }}</p>
+        <h1 class="page-title text-center">Моят дневник</h1>
+        {% if total %}
+            <p class="page-lead text-center">
+                {{ total }} {{ total == 1 ? 'запис' : 'записа' }} · {{ quest_count }} {{ quest_count == 1 ? 'различен куест' : 'различни куеста' }}
+            </p>
+        {% endif %}
+        <p class="form-links">
+            <a href="{{ path('app_quests') }}">Избери куест</a>
+            <span aria-hidden="true">·</span>
+            <a href="{{ path('app_profile') }}">Профил</a>
+        </p>
+        {{ f.flashes() }}
+        <twig:Ornament class="my-6"/>
+
+        {% if entries is empty %}
+            <p class="empty-note">Дневникът още е празен. Изпълни куест и го запиши от неговата страница — заедно с бележка как е минало.</p>
+            <p class="mt-6 text-center"><a href="{{ path('app_quests') }}" class="btn">Към куестовете</a></p>
+        {% else %}
+            <ol class="journal" role="list">
+                {% for entry in entries %}
+                    {% set quest = entry.quest %}
+                    <li class="journal-entry" style="--path: {{ quest ? quest.path.color : 'var(--rule)' }}">
+                        <p class="journal-date">
+                            <time datetime="{{ entry.completedOn|date('Y-m-d') }}">{{ entry.completedOn|format_date(pattern: 'd MMMM y', locale: 'bg') }}</time>
+                        </p>
+                        <h2 class="journal-title">
+                            {% if quest and quest.visible %}
+                                <a href="{{ path('app_quest', {slug: quest.slug}) }}">{{ entry.questTitle }}</a>
+                            {% else %}
+                                {{ entry.questTitle }}
+                            {% endif %}
+                        </h2>
+                        {% if entry.note %}
+                            <p class="journal-note">{{ entry.note|nl2br }}</p>
+                        {% endif %}
+                        <p class="journal-actions">
+                            <a href="{{ path('app_journal_edit', {id: entry.id}) }}">Промени<span class="sr-only"> записа за „{{ entry.questTitle }}“ от {{ entry.completedOn|date('d.m.Y') }}</span></a>
+                        </p>
+                    </li>
+                {% endfor %}
+            </ol>
+
+            {% if pages > 1 %}
+                <nav class="journal-pages" aria-label="Страници на дневника">
+                    {% if page > 1 %}<a href="{{ path('app_journal', {stranitsa: page - 1}) }}" class="btn btn-outline">← По-нови</a>{% endif %}
+                    <span>Страница {{ page }} от {{ pages }}</span>
+                    {% if page < pages %}<a href="{{ path('app_journal', {stranitsa: page + 1}) }}" class="btn btn-outline">По-стари →</a>{% endif %}
+                </nav>
+            {% endif %}
+        {% endif %}
+    </section>
+{% endblock %}

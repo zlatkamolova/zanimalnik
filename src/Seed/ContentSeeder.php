@@ -61,6 +61,10 @@ final class ContentSeeder
 
         $this->em->persist(new Setting(Setting::ABOUT_TITLE, ExampleContent::ABOUT_TITLE));
         $this->em->persist(new Setting(Setting::ABOUT_BODY, trim(ExampleContent::ABOUT_BODY)));
+        // on a real server the migration has already inserted the privacy texts
+        $settings = $this->em->getRepository(Setting::class);
+        $settings->getOrCreate(Setting::PRIVACY_TITLE)->setValue(ExampleContent::PRIVACY_TITLE);
+        $settings->getOrCreate(Setting::PRIVACY_BODY)->setValue(trim(ExampleContent::PRIVACY_BODY));
 
         $tags = [];
         foreach (ExampleContent::TAGS as $slug => $name) {

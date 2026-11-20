@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% import '_form.html.twig' as f %}
+
+{% block title %}Запис в дневника{% endblock %}
+{% block robots %}<meta name="robots" content="noindex">{% endblock %}
+{% block canonical %}{{ url('app_journal') }}{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-md px-4 py-12">
+        <p class="eyebrow text-center">Запис в дневника</p>
+        <h1 class="page-title text-center">{{ entry.questTitle }}</h1>
+
+        {{ form_start(form, {attr: {class: 'form-card'}}) }}
+            {{ form_errors(form) }}
+            {{ f.row(form.completedOn) }}
+            {{ f.row(form.note, 'Как мина, какво откри, какво би направил другояче. Вижда я само ти.') }}
+            <button type="submit" class="btn">Запази</button>
+        {{ form_end(form) }}
+
+        {% if delete_form %}
+            {{ form_start(delete_form, {attr: {class: 'form-card form-card-danger'}}) }}
+                <h2 class="form-title">Изтриване</h2>
+                <p>Записът и бележката към него се изтриват безвъзвратно.</p>
+                <button type="submit" class="btn btn-danger">Изтрий записа</button>
+            {{ form_end(delete_form) }}
+        {% endif %}
+
+        <p class="form-links"><a href="{{ path('app_journal') }}">← Към дневника</a></p>
+    </section>
+{% endblock %}

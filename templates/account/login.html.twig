@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Вход{% endblock %}
+{% block description %}Влез в профила си в Занималника, за да отвориш своя дневник с изпълнени куестове и бележки.{% endblock %}
+{% block robots %}<meta name="robots" content="noindex">{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-md px-4 py-12">
+        <h1 class="page-title text-center">Вход</h1>
+        <p class="page-lead text-center">Влез, за да отвориш своя дневник.</p>
+
+        <form method="post" action="{{ path('app_login') }}" class="form-card">
+            {% if error %}
+                <p class="form-error" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+            {% endif %}
+            <div class="field">
+                <label for="username">Имейл</label>
+                <input class="field-input" type="email" id="username" name="_username" value="{{ last_username }}" autocomplete="email" required autofocus>
+            </div>
+            <div class="field">
+                <label for="password">Парола</label>
+                <input class="field-input" type="password" id="password" name="_password" autocomplete="current-password" required>
+            </div>
+            <label class="field-check">
+                <input type="checkbox" name="_remember_me"> Запомни ме на това устройство
+            </label>
+            <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+            <input type="hidden" name="_target_path" value="{{ target_path }}">
+            <input type="hidden" name="_failure_path" value="{{ path('app_user_login', back ? {kam: back} : {}) }}">
+            <button type="submit" class="btn">Вход</button>
+        </form>
+
+        <p class="form-links">
+            <a href="{{ path('app_forgot_password') }}">Забравена парола?</a>
+            <span aria-hidden="true">·</span>
+            <a href="{{ path('app_register', back ? {kam: back} : {}) }}">Нямаш профил? Регистрирай се</a>
+        </p>
+    </section>
+{% endblock %}
