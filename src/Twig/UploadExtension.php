@@ -2,16 +2,18 @@
 
 namespace App\Twig;
 
+use App\Entity\Joke;
 use App\Entity\Quest;
 use App\Service\CoverImageProcessor;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Attribute\AsTwigFunction;
 
-/** URLs of uploaded quest files. Paths are relative to the web root (public_html). */
+/** URLs of uploaded files (quests, jokes). Paths are relative to the web root (public_html). */
 final class UploadExtension
 {
     public const COVER_PREFIX = '/uploads/quests/covers/';
     public const PDF_PREFIX = '/uploads/quests/pdf/';
+    public const JOKE_PREFIX = '/uploads/jokes/';
 
     public function __construct(
         #[Autowire('%app.quest_cover_dir%')] private readonly string $coverDir,
@@ -22,6 +24,12 @@ final class UploadExtension
     public function pdfUrl(Quest $quest): ?string
     {
         return $quest->getPdfPath() ? self::PDF_PREFIX.rawurlencode($quest->getPdfPath()) : null;
+    }
+
+    #[AsTwigFunction('joke_image_url')]
+    public function jokeImageUrl(Joke $joke): ?string
+    {
+        return $joke->getImagePath() ? self::JOKE_PREFIX.rawurlencode($joke->getImagePath()) : null;
     }
 
     /** $size: "full" (max 1600 px) or "card" (640 px WebP, falls back to full if missing). */

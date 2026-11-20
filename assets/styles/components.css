@@ -129,6 +129,22 @@
     }
     .other-paths a:hover { border-color: var(--control); }
 
+    /* ---------------- joke / anecdote / meme of the day: a note pinned to the page ---------------- */
+    .joke-note {
+        position: relative; margin: 2rem auto 0; padding: 2rem 1.5rem 1.75rem; text-align: center;
+        background: var(--paper) var(--grain); border: 1px solid var(--rule); border-radius: .35rem;
+        box-shadow: var(--shadow); rotate: -.6deg;
+    }
+    .joke-note::before { /* the wax drop that holds the note */
+        content: ""; position: absolute; top: -.7rem; left: 50%; translate: -50% 0; width: 1.4rem; height: 1.4rem; border-radius: 50%;
+        background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--accent) 70%, #fff), var(--accent) 60%);
+        box-shadow: 0 2px 3px rgb(40 20 0 / .4);
+    }
+    .joke-image { display: block; max-width: 100%; max-height: 34rem; height: auto; margin-inline: auto; border-radius: .25rem; }
+    .joke-image + .joke-text { margin-top: 1.25rem; }
+    .joke-text { font-family: var(--font-serif); font-size: clamp(1.3rem, 3.2vw, 1.6rem); line-height: 1.5; color: var(--ink); }
+    @media (prefers-reduced-motion: reduce), (max-width: 480px) { .joke-note { rotate: none; } }
+
     /* ---------------- quest cards: small scrolls ---------------- */
     .card-grid {
         display: grid; gap: 2rem 1.5rem; grid-template-columns: repeat(auto-fit, minmax(17rem, 23rem));
