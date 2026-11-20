@@ -14,11 +14,15 @@ class Setting implements \Stringable
 {
     public const ABOUT_TITLE = 'about.title';
     public const ABOUT_BODY = 'about.body';
+    public const PRIVACY_TITLE = 'privacy.title';
+    public const PRIVACY_BODY = 'privacy.body';
 
     /** Human labels for the admin; keys ending in ".body" are edited as rich text. */
     public const LABELS = [
         self::ABOUT_TITLE => '„За сайта“ — заглавие',
         self::ABOUT_BODY => '„За сайта“ — текст',
+        self::PRIVACY_TITLE => '„Поверителност“ — заглавие',
+        self::PRIVACY_BODY => '„Поверителност“ — текст',
     ];
 
     #[ORM\Id]

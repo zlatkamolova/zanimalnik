@@ -24,6 +24,7 @@ final class AdminAccessTest extends WebDatabaseTestCase
         yield 'шеги' => ['/admin/joke'];
         yield 'нова шега' => ['/admin/joke/new'];
         yield 'текстове' => ['/admin/setting'];
+        yield 'потребители' => ['/admin/user'];
         yield 'предизвикателства' => ['/admin/daily-challenges'];
     }
 
@@ -110,7 +111,7 @@ final class AdminAccessTest extends WebDatabaseTestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Добре дошли');
 
-        $this->client->request('GET', '/admin/logout');
+        $this->client->request('GET', '/izhod');
         $this->client->followRedirect();
         $this->client->request('GET', '/admin');
         self::assertResponseRedirects('/admin/login');

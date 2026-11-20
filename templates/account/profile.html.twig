@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% import '_form.html.twig' as f %}
+
+{% block title %}Профил{% endblock %}
+{% block robots %}<meta name="robots" content="noindex">{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-md px-4 py-12">
+        <h1 class="page-title text-center">Профил</h1>
+        <p class="page-lead text-center">{{ app.user.email }}</p>
+        {{ f.flashes() }}
+
+        <p class="form-links">
+            <a href="{{ path('app_journal') }}">← Към дневника</a>
+        </p>
+
+        {{ form_start(name_form, {attr: {class: 'form-card'}}) }}
+            <h2 class="form-title">Име</h2>
+            {{ f.row(name_form.displayName, 'Как да те наричаме в дневника. Може да остане празно.') }}
+            <button type="submit" class="btn">Запази</button>
+        {{ form_end(name_form) }}
+
+        {{ form_start(password_form, {attr: {class: 'form-card'}}) }}
+            <h2 class="form-title">Смяна на паролата</h2>
+            {{ f.row(password_form.current) }}
+            {{ f.row(password_form.new, 'Поне 8 знака.') }}
+            <button type="submit" class="btn">Смени паролата</button>
+        {{ form_end(password_form) }}
+
+        <form method="post" action="{{ path('app_logout') }}" class="form-card" data-turbo="false">
+            <h2 class="form-title">Изход</h2>
+            <button type="submit" class="btn btn-outline">Излез от профила</button>
+        </form>
+
+        {% if delete_form %}
+            {{ form_start(delete_form, {attr: {class: 'form-card form-card-danger', 'data-turbo': 'false'}}) }}
+                <h2 class="form-title">Изтриване на профила</h2>
+                <p>Профилът, името и целият дневник с бележките се изтриват безвъзвратно.</p>
+                {{ f.row(delete_form.current, 'За да сме сигурни, че си ти.') }}
+                <button type="submit" class="btn btn-danger">Изтрий профила и дневника</button>
+            {{ form_end(delete_form) }}
+        {% endif %}
+    </section>
+{% endblock %}

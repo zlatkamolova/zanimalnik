@@ -9,6 +9,8 @@
 parameters:
     # GoatCounter site code; empty = no visitor statistics (see .env / .env.prod)
     env(GOATCOUNTER_CODE): ''
+    # sender of the "forgotten password" e-mail; must be a mailbox of the site's own domain
+    env(MAILER_FROM): 'no-reply@zanimalnik.com'
     # app.public_dir is set by App\Kernel (web root differs locally and on the server)
     app.uploads_dir: '%app.public_dir%/uploads'
     app.quest_pdf_dir: '%app.uploads_dir%/quests/pdf'

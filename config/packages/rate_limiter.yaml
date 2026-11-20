@@ -1,0 +1,18 @@
+framework:
+    rate_limiter:
+        # new accounts from one IP address (there is no e-mail confirmation)
+        registration:
+            policy: fixed_window
+            limit: 5
+            interval: '1 hour'
+        # "forgotten password" e-mails requested from one IP address
+        password_reset:
+            policy: fixed_window
+            limit: 5
+            interval: '1 hour'
+
+when@test:
+    framework:
+        rate_limiter:
+            registration: { policy: fixed_window, limit: 1000, interval: '1 hour' }
+            password_reset: { policy: fixed_window, limit: 1000, interval: '1 hour' }

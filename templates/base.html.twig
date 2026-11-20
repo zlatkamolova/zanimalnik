@@ -24,6 +24,7 @@
         <meta property="og:description" content="{{ page_description }}">
         <meta property="og:url" content="{{ canonical }}">
         {% block og_image %}{% endblock %}
+        {% block robots %}{% endblock %}
         <meta name="twitter:card" content="summary_large_image">
 
         <meta name="color-scheme" content="light dark">
@@ -68,6 +69,11 @@
                                    {{ current_route == 'app_path' and app.request.attributes.get('slug') == nav_path.slug ? 'aria-current="page"' }}>{{ nav_path.name }}</a></li>
                         {% endfor %}
                         <li><a href="{{ path('app_about') }}" {{ current_route == 'app_about' ? 'aria-current="page"' }}>За сайта</a></li>
+                        {% if current_user() %}
+                            <li><a href="{{ path('app_journal') }}" class="nav-account" {{ current_route starts with 'app_journal' ? 'aria-current="page"' }}>Дневник</a></li>
+                        {% else %}
+                            <li><a href="{{ path('app_user_login') }}" class="nav-account" {{ current_route == 'app_user_login' ? 'aria-current="page"' }}>Вход</a></li>
+                        {% endif %}
                     </ul>
                 </nav>
             </div>
@@ -82,7 +88,8 @@
                 <twig:Ornament/>
                 <p class="mt-4 text-center text-sm">
                     Занималник · куестове от реалния живот ·
-                    <a href="{{ path('app_about') }}">За сайта</a>
+                    <a href="{{ path('app_about') }}">За сайта</a> ·
+                    <a href="{{ path('app_privacy') }}">Поверителност</a>
                 </p>
             </div>
         </footer>

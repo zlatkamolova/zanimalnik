@@ -24,6 +24,7 @@
         "symfony/html-sanitizer": "7.4.*",
         "symfony/intl": "7.4.*",
         "symfony/lock": "7.4.*",
+        "symfony/mailer": "7.4.*",
         "symfony/monolog-bundle": "^4.1",
         "symfony/process": "7.4.*",
         "symfony/rate-limiter": "7.4.*",

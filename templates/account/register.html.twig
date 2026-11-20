@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% import '_form.html.twig' as f %}
+
+{% block title %}Регистрация{% endblock %}
+{% block description %}Направи си профил в Занималника и получи личен дневник: отбелязвай изпълнените куестове и пази бележки за тях.{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-md px-4 py-12">
+        <h1 class="page-title text-center">Регистрация</h1>
+        <p class="page-lead text-center">С профил получаваш личен дневник: отбелязваш изпълнените куестове и пазиш бележки за тях. Вижда го само ти.</p>
+
+        {{ form_start(form, {attr: {class: 'form-card'}}) }}
+            {{ form_errors(form) }}
+            {{ f.row(form.email, 'С него влизаш. Писмо получаваш само ако забравиш паролата си.') }}
+            {{ f.row(form.displayName, 'Как да те наричаме в дневника.') }}
+            {{ f.row(form.plainPassword, 'Поне 8 знака.') }}
+            <div class="field{{ form.agree.vars.errors|length ? ' has-error' }}">
+                <label class="field-check">
+                    {{ form_widget(form.agree) }}
+                    <span>Приемам <a href="{{ path('app_privacy') }}">правилата за поверителност</a></span>
+                </label>
+                {{ form_errors(form.agree) }}
+            </div>
+            <div class="field-trap" aria-hidden="true">
+                {{ form_label(form.website) }}
+                {{ form_widget(form.website) }}
+            </div>
+            <button type="submit" class="btn">Създай профил</button>
+        {{ form_end(form) }}
+
+        <p class="form-links">
+            <a href="{{ path('app_user_login', back ? {kam: back} : {}) }}">Вече имаш профил? Влез</a>
+        </p>
+    </section>
+{% endblock %}

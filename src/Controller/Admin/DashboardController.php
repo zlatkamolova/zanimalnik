@@ -70,7 +70,8 @@ final class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(SignRoleCrudController::class, 'Роли за знака', 'fa fa-mask');
 
         yield MenuItem::section('Сайт');
-        yield MenuItem::linkTo(SettingCrudController::class, 'Страница „За сайта“', 'fa fa-feather');
+        yield MenuItem::linkTo(UserCrudController::class, 'Потребители', 'fa fa-users');
+        yield MenuItem::linkTo(SettingCrudController::class, 'Текстове на сайта', 'fa fa-feather');
         yield MenuItem::linkToUrl('Към сайта', 'fa fa-arrow-up-right-from-square', '/')->setLinkTarget('_blank');
     }
 }

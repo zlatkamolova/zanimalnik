@@ -15,6 +15,8 @@
     --control: #86704b;          /* borders of inputs and selects */
     --accent: #8a3b12;
     --focus: #1f5fd1;
+    --danger: #a3271b;           /* errors, destructive buttons */
+    --ok: #2f6b3a;               /* confirmation messages (tint and border only) */
     --wood-dark: #4a3420;
     --wood-light: #a27a4f;
     --shadow: 0 1px 0 rgb(255 255 255 / .6) inset, 0 10px 24px -14px rgb(60 40 15 / .45);
@@ -35,6 +37,8 @@
         --control: #97835f;
         --accent: #e0915c;
         --focus: #8ab4ff;
+        --danger: #f0907f;
+        --ok: #7fbf8a;
         --wood-dark: #120d08;
         --wood-light: #5a4330;
         --shadow: 0 1px 0 rgb(255 255 255 / .04) inset, 0 12px 28px -14px rgb(0 0 0 / .7);

@@ -1,0 +1,18 @@
+{# Form rows in the site's look. Usage: {% import '_form.html.twig' as f %} {{ f.row(form.email, 'help text') }} #}
+{% macro row(field, help = null) %}
+    {% set help_id = field.vars.id ~ '_help' %}
+    <div class="field{{ field.vars.errors|length ? ' has-error' }}">
+        {{ form_label(field) }}
+        {{ form_widget(field, {attr: field.vars.attr|merge({class: 'field-input'}, help ? {'aria-describedby': help_id} : {})}) }}
+        {% if help %}<p class="field-help" id="{{ help_id }}">{{ help }}</p>{% endif %}
+        {{ form_errors(field) }}
+    </div>
+{% endmacro %}
+
+{% macro flashes() %}
+    {% if app.request and app.request.hasPreviousSession %}
+        {% for message in app.flashes('success') %}
+            <p class="flash" role="status">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
