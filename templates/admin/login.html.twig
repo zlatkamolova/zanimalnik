@@ -7,3 +7,9 @@
     {{ parent() }}
     {{ importmap('csrf') }}
 {% endblock %}
+
+{% block login_form_footer %}
+    <p class="text-center mt-3 mb-0">
+        <a href="{{ path('app_forgot_password') }}">Забравена парола?</a>
+    </p>
+{% endblock %}

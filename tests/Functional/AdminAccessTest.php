@@ -103,6 +103,7 @@ final class AdminAccessTest extends WebDatabaseTestCase
         $crawler = $this->client->request('GET', '/admin/login');
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('label[for="username"]', 'Имейл');
+        self::assertSelectorTextContains('a[href="/zabravena-parola"]', 'Забравена парола?');
 
         $form = $crawler->filter('form')->form(['_username' => 'admin@example.com', '_password' => 'wrong-password']);
         $this->client->submit($form, [], ['HTTP_ORIGIN' => 'http://localhost']);

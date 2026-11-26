@@ -146,8 +146,8 @@ final class AccountTest extends WebDatabaseTestCase
         $crawler = $this->client->request('GET', '/zabravena-parola');
         $this->client->submit($crawler->filter('form[name="form"]')->form(['form[email]' => 'MILA@example.com']), [], self::ORIGIN);
 
-        self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('.flash', 'Ако има профил с този имейл');
+        // a redirect: Turbo shows nothing for a plain 200 page in answer to a form
+        self::assertResponseRedirects('/zabravena-parola?izprateno=1', 303);
         self::assertEmailCount(1);
         $email = self::getMailerMessage();
         self::assertEmailAddressContains($email, 'to', 'mila@example.com');
@@ -178,8 +178,11 @@ final class AccountTest extends WebDatabaseTestCase
     {
         $crawler = $this->client->request('GET', '/zabravena-parola');
         $this->client->submit($crawler->filter('form[name="form"]')->form(['form[email]' => 'nyama@example.com']), [], self::ORIGIN);
-        self::assertSelectorTextContains('.flash', 'Ако има профил с този имейл');
+        self::assertResponseRedirects('/zabravena-parola?izprateno=1', 303);
         self::assertEmailCount(0);
+        $this->client->followRedirect();
+        self::assertSelectorTextContains('.flash', 'Ако има профил с този имейл');
+        self::assertSame([], $this->client->getResponse()->headers->getCookies(), 'the confirmation needs no session');
 
         $user = $this->createUser('mila@example.com', []);
         $token = str_repeat('ab', 32);

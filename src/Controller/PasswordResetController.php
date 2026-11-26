@@ -31,16 +31,21 @@ final class PasswordResetController extends AbstractController
             ->getForm();
         $form->handleRequest($request);
 
-        $sent = false;
         if ($form->isSubmitted() && $form->isValid()) {
             // at most a few e-mails per hour from one address; the answer is the same either way
             if ($limiter->create((string) $request->getClientIp())->consume()->isAccepted()) {
                 $reset->sendLink($form->get('email')->getData());
             }
-            $sent = true;
+
+            // Redirect, don't render: Turbo ignores a plain 200 page in answer to a form.
+            // The confirmation travels in the address, so no session (and no cookie) is needed.
+            return $this->redirectToRoute('app_forgot_password', ['izprateno' => 1], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('account/forgot_password.html.twig', ['form' => $form, 'sent' => $sent]);
+        return $this->render('account/forgot_password.html.twig', [
+            'form' => $form,
+            'sent' => $request->isMethod('GET') && $request->query->has('izprateno'),
+        ]);
     }
 
     #[Route('/nova-parola/{token}', name: 'app_reset_password', requirements: ['token' => '[a-f0-9]{64}'], methods: ['GET', 'POST'])]
