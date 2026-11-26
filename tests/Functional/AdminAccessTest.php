@@ -82,6 +82,20 @@ final class AdminAccessTest extends WebDatabaseTestCase
         self::assertResponseStatusCodeSame(403);
     }
 
+    public function testAdminPagesLoadTheCsrfScript(): void
+    {
+        // Symfony remembers per session that a form used the double-submit token (the public site does)
+        // and then refuses forms without it — so the admin login and the admin itself must send it too.
+        $this->client->request('GET', '/admin/login');
+        self::assertStringContainsString('csrf_protection_controller', (string) $this->client->getResponse()->getContent());
+
+        $this->client->loginUser($this->createUser('admin@example.com', [User::ROLE_ADMIN]));
+        $this->client->request('GET', '/admin');
+        $html = (string) $this->client->getResponse()->getContent();
+        self::assertSame(1, preg_match('#"admin": "([^"]+)"#', $html, $m), 'the admin entry point is in the import map');
+        self::assertStringContainsString('csrf_protection_controller', $html, 'and it pulls in the CSRF script');
+    }
+
     public function testLoginWithWrongPasswordShowsBulgarianError(): void
     {
         $this->createUser('admin@example.com', [User::ROLE_ADMIN], 'correct-horse-battery');
