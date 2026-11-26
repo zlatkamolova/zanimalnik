@@ -1,0 +1,9 @@
+{# EasyAdmin's login page plus the site's CSRF double-submit script.
+   Symfony remembers per session that the double-submit was used (e.g. on /vhod) and from then on
+   refuses forms that come without it — so this page must send it too. #}
+{% extends '@EasyAdmin/page/login.html.twig' %}
+
+{% block head_javascript %}
+    {{ parent() }}
+    {{ importmap('csrf') }}
+{% endblock %}

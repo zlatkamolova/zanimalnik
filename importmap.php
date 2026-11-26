@@ -20,6 +20,11 @@ return [
         'path' => './assets/admin.js',
         'entrypoint' => true,
     ],
+    // the admin login page: only the CSRF double-submit script (see templates/admin/login.html.twig)
+    'csrf' => [
+        'path' => './assets/controllers/csrf_protection_controller.js',
+        'entrypoint' => true,
+    ],
     '@hotwired/stimulus' => [
         'version' => '3.2.2',
     ],
