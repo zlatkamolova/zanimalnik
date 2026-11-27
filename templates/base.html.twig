@@ -89,7 +89,9 @@
                 <p class="mt-4 text-center text-sm">
                     Занималник · куестове от реалния живот ·
                     <a href="{{ path('app_about') }}">За сайта</a> ·
-                    <a href="{{ path('app_privacy') }}">Поверителност</a>
+                    <a href="{{ path('app_privacy') }}">Поверителност</a> ·
+                    {# a page with a layout of its own (templates/wall/), so Turbo must load it in full #}
+                    <a href="{{ path('app_blog') }}" data-turbo="false">Блог</a>
                 </p>
             </div>
         </footer>

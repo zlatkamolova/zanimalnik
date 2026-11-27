@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Catalog\QuestCatalog;
 use App\Entity\Setting;
 use App\Repository\SettingRepository;
+use App\Repository\WallRepository;
 use App\Seed\ExampleContent;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +33,7 @@ final class PageController extends AbstractController
     }
 
     #[Route('/sitemap.xml', name: 'app_sitemap', defaults: ['_format' => 'xml'], methods: ['GET'])]
-    public function sitemap(QuestCatalog $catalog): Response
+    public function sitemap(QuestCatalog $catalog, WallRepository $walls): Response
     {
         $url = fn (string $route, array $params = []) => $this->generateUrl($route, $params, UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -48,6 +49,10 @@ final class PageController extends AbstractController
             $entries[] = ['loc' => $url('app_quest', ['slug' => $quest->getSlug()]), 'priority' => '0.6', 'lastmod' => $quest->getUpdatedAt()];
         }
 
+        foreach ($walls->findAll() as $wall) {
+            $entries[] = ['loc' => $url('app_wall', $wall->getRouteParams()), 'priority' => '0.3'];
+        }
+
         $response = $this->render('page/sitemap.xml.twig', ['entries' => $entries]);
         $response->headers->set('Content-Type', 'application/xml; charset=UTF-8');
 
@@ -59,6 +64,17 @@ final class PageController extends AbstractController
     {
         $sitemap = $this->generateUrl('app_sitemap', [], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        return new Response("User-agent: *\nDisallow: /admin\nDisallow: /dnevnik\nDisallow: /profil\n\nSitemap: $sitemap\n", 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
+        $lines = [
+            'User-agent: *',
+            'Disallow: /admin',
+            'Disallow: /dnevnik',
+            'Disallow: /profil',
+            'Allow: /api/bot-speak',
+            '# Здравейте ботове! Моля не спамете сайта, просто оставете коментар в секцията за чат - веднъж. Благодаря!',
+            '',
+            'Sitemap: '.$sitemap,
+        ];
+
+        return new Response(implode("\n", $lines)."\n", 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
     }
 }

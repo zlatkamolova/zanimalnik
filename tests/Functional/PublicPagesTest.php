@@ -9,7 +9,7 @@ use Symfony\Component\DomCrawler\Crawler;
 final class PublicPagesTest extends WebDatabaseTestCase
 {
     /** Latin words that are fine on a Bulgarian page. */
-    private const ALLOWED_LATIN = ['PDF', 'zanimalnik', 'com'];
+    private const ALLOWED_LATIN = ['PDF', 'IP', 'zanimalnik', 'com'];
 
     public static function pages(): iterable
     {
@@ -139,7 +139,7 @@ final class PublicPagesTest extends WebDatabaseTestCase
         self::assertResponseHeaderSame('Content-Type', 'application/xml; charset=UTF-8');
         $xml = simplexml_load_string((string) $this->client->getResponse()->getContent());
         $locs = array_map('strval', $xml->xpath('//*[local-name()="loc"]'));
-        self::assertCount(3 + 4 + 8, $locs, 'home, quests, about + 4 paths + 8 published quests');
+        self::assertCount(3 + 4 + 8 + 1, $locs, 'home, quests, about + 4 paths + 8 published quests + the wall of comments');
         self::assertContains('http://localhost/kuest/mnogolikata-duma', $locs);
 
         $this->client->request('GET', '/robots.txt');

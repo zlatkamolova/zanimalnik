@@ -16,6 +16,8 @@ parameters:
     app.quest_pdf_dir: '%app.uploads_dir%/quests/pdf'
     app.quest_cover_dir: '%app.uploads_dir%/quests/covers'
     app.joke_image_dir: '%app.uploads_dir%/jokes'
+    # slug of the wall that /blog opens and that /api/bot-speak writes to when no "wall" is given
+    app.default_wall: 'sabirame-idei'
 
 services:
     # default configuration for services in *this* file

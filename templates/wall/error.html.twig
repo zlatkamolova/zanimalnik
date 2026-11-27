@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Грешка при публикуване на коментар</title>
+</head>
+<body>
+<p>{{ message }}</p>
+{% if lines %}
+<ul>
+{% for line in lines %}
+<li>{{ line }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+<p><a href="{{ back }}">« Назад</a></p>
+</body>
+</html>

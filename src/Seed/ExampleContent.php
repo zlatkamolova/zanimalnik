@@ -64,7 +64,21 @@ final class ExampleContent
         <p>Без вход сайтът не записва бисквитки от сървъра; знакът на деня пази избора ти само в твоя браузър. Когато влезеш в профила си, се записва една бисквитка, която те държи вписан — без нея входът не може да работи. Ако отметнеш „Запомни ме“, се записва още една, за 30 дни. Статистиката за посещенията е без бисквитки и не разпознава отделни хора.</p>
         <h2>Изтриване</h2>
         <p>От страницата „Профил“ можеш по всяко време да изтриеш профила си. Заедно с него безвъзвратно се изтриват имейлът, името и целият дневник.</p>
-        HTML;
+        HTML.self::PRIVACY_COMMENTS;
+
+    /** Added to the privacy text together with the wall of public comments (also by its migration, on the live site). */
+    public const PRIVACY_COMMENTS = "\n<h2>Коментари в блога</h2>\n<p>Коментарите в блога са публични: името, текстът и операционната система, които напишеш, се виждат от всички. Срещу злоупотреби към всеки коментар се пазят хеш на IP адреса и видът на браузъра; самият IP адрес не се пази.</p>";
+
+    /** The wall of public comments (see App\Entity\Wall). The live site gets it from the migration. */
+    public const WALL_SLUG = 'sabirame-idei';
+    public const WALL_TITLE = 'Събираме идеи';
+    public const WALL_PUBLISHED_AT = '2026-11-27 09:00:00';
+    public const WALL_COMMENTS = [
+        ['message' => 'тест', 'created_at' => '2026-11-27 10:00:00'],
+        ['message' => 'работи ли', 'created_at' => '2026-11-27 10:01:00'],
+    ];
+    public const WALL_COMMENT_NAME = 'admin';
+    public const WALL_COMMENT_OS = 'Windows 10';
 
     /** Dev only (`make db`): on the live site the admin adds the jokes. */
     public const JOKES = [
