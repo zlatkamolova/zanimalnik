@@ -1,0 +1,378 @@
+/* The wall of public comments (templates/wall/show.html.twig).
+   A plain blog look of its own: nothing here is shared with the styles of the main site. */
+
+html {
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    background: #fff;
+    color: #333;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+a {
+    color: #0073aa;
+}
+
+a:hover,
+a:focus {
+    color: #005177;
+}
+
+.site {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 24px 64px;
+}
+
+.site-header {
+    padding: 40px 0 28px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 40px;
+}
+
+.site-title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.site-title a {
+    color: #222;
+    text-decoration: none;
+}
+
+.site-content {
+    display: flex;
+    gap: 56px;
+    align-items: flex-start;
+}
+
+.content-area {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.widget-area {
+    flex: 0 0 240px;
+    font-size: 14px;
+}
+
+/* the post */
+
+.entry-title {
+    margin: 0 0 8px;
+    color: #222;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.entry-meta {
+    margin: 0 0 28px;
+    color: #767676;
+    font-size: 13px;
+}
+
+.entry-meta a {
+    color: #767676;
+}
+
+.entry-content p {
+    margin: 0 0 1.5em;
+}
+
+code,
+pre {
+    font-family: Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 14px;
+}
+
+code {
+    background: #f4f4f4;
+    padding: 1px 4px;
+}
+
+pre {
+    margin: 0 0 1.5em;
+    padding: 16px;
+    background: #f4f4f4;
+    line-height: 1.5;
+    overflow-x: auto;
+}
+
+pre code {
+    padding: 0;
+    background: none;
+}
+
+/* comments */
+
+.comments-area {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid #ddd;
+}
+
+.comments-title,
+.comment-reply-title {
+    margin: 0 0 24px;
+    color: #222;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.comment-reply-title small {
+    margin-left: 8px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.comment-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0 24px;
+    font-size: 14px;
+}
+
+.comment-navigation .nav-next {
+    margin-left: auto;
+}
+
+.comment-list,
+.comment-list .children {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.comment-list .children {
+    margin-left: 40px;
+}
+
+.comment-body {
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.comment-body:target {
+    background: #fffbe5;
+}
+
+.comment-author {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+}
+
+.comment-author .avatar {
+    flex: none;
+    margin-right: 6px;
+    border-radius: 50%;
+}
+
+.comment-metadata {
+    margin: 2px 0 10px 54px;
+    color: #767676;
+    font-size: 12px;
+}
+
+.comment-metadata a {
+    color: #767676;
+    text-decoration: none;
+}
+
+.comment-metadata a:hover {
+    text-decoration: underline;
+}
+
+.comment-metadata .via {
+    margin-left: 6px;
+    color: #999;
+    font-size: 11px;
+}
+
+.comment-content {
+    margin-left: 54px;
+    overflow-wrap: anywhere;
+}
+
+.comment-content p {
+    margin: 0 0 10px;
+}
+
+.comment-content .comment-os {
+    color: #767676;
+    font-size: 13px;
+}
+
+.reply {
+    margin-left: 54px;
+    font-size: 13px;
+}
+
+.moderation {
+    margin: 8px 0 0 54px;
+}
+
+.comment-respond > .moderation {
+    margin: 16px 0 0;
+}
+
+.moderation button {
+    margin-right: 12px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #a00;
+    font: inherit;
+    font-size: 13px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* the form */
+
+.comment-respond {
+    margin-top: 40px;
+}
+
+.comment-notes {
+    margin: 0 0 16px;
+    color: #767676;
+    font-size: 13px;
+}
+
+.required {
+    color: #a00;
+}
+
+.comment-form p {
+    margin: 0 0 16px;
+}
+
+.comment-form label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.comment-form textarea,
+.comment-form input[type="text"] {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #bbb;
+    border-radius: 2px;
+    background: #fff;
+    color: #333;
+    font: inherit;
+}
+
+.comment-form input[type="text"] {
+    max-width: 360px;
+}
+
+.comment-form textarea:focus,
+.comment-form input[type="text"]:focus {
+    border-color: #0073aa;
+    outline: 2px solid #0073aa;
+    outline-offset: 0;
+}
+
+/* not meant for people */
+.comment-form .comment-form-contact {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.comment-form .submit {
+    padding: 10px 18px;
+    border: 0;
+    border-radius: 2px;
+    background: #222;
+    color: #fff;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.comment-form .submit:hover,
+.comment-form .submit:focus {
+    background: #0073aa;
+}
+
+.no-comments {
+    color: #767676;
+    font-style: italic;
+}
+
+/* the side column */
+
+.widget {
+    margin: 0 0 36px;
+}
+
+.widget-title {
+    margin: 0 0 12px;
+    color: #222;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.widget ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.widget li {
+    padding: 6px 0;
+    border-top: 1px solid #eee;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 782px) {
+    .site {
+        padding: 0 16px 48px;
+    }
+
+    .site-header {
+        padding: 24px 0 20px;
+        margin-bottom: 28px;
+    }
+
+    .site-content {
+        display: block;
+    }
+
+    .widget-area {
+        margin-top: 48px;
+        padding-top: 32px;
+        border-top: 1px solid #ddd;
+    }
+
+    .entry-title {
+        font-size: 26px;
+    }
+
+    .comment-list .children {
+        margin-left: 20px;
+    }
+}

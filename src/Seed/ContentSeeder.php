@@ -8,6 +8,8 @@ use App\Entity\Quest;
 use App\Entity\Setting;
 use App\Entity\SignRole;
 use App\Entity\Tag;
+use App\Entity\Wall;
+use App\Entity\WallComment;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
@@ -65,6 +67,8 @@ final class ContentSeeder
         $settings = $this->em->getRepository(Setting::class);
         $settings->getOrCreate(Setting::PRIVACY_TITLE)->setValue(ExampleContent::PRIVACY_TITLE);
         $settings->getOrCreate(Setting::PRIVACY_BODY)->setValue(trim(ExampleContent::PRIVACY_BODY));
+
+        $this->seedWall();
 
         $tags = [];
         foreach (ExampleContent::TAGS as $slug => $name) {
@@ -124,5 +128,31 @@ final class ContentSeeder
             'тагове' => \count($tags),
             'куеста' => \count(ExampleContent::QUESTS) + ($withDraft ? 1 : 0),
         ];
+    }
+
+    /** The wall of public comments with its first two comments; on a real server the migration has already created it. */
+    private function seedWall(): void
+    {
+        if ($this->em->getRepository(Wall::class)->findOneBy(['slug' => ExampleContent::WALL_SLUG])) {
+            return;
+        }
+
+        $wall = new Wall(ExampleContent::WALL_SLUG, ExampleContent::WALL_TITLE, new \DateTimeImmutable(ExampleContent::WALL_PUBLISHED_AT));
+        $this->em->persist($wall);
+
+        foreach (ExampleContent::WALL_COMMENTS as $data) {
+            $this->em->persist(new WallComment(
+                $wall,
+                null,
+                ExampleContent::WALL_COMMENT_NAME,
+                $data['message'],
+                ExampleContent::WALL_COMMENT_OS,
+                WallComment::VIA_FORM,
+                hash('sha256', 'seed'),
+                hash('sha256', $data['message']),
+                null,
+                new \DateTimeImmutable($data['created_at']),
+            ));
+        }
     }
 }

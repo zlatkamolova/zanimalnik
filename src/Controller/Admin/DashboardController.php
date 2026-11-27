@@ -71,6 +71,7 @@ final class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section('Сайт');
         yield MenuItem::linkTo(UserCrudController::class, 'Потребители', 'fa fa-users');
+        yield MenuItem::linkTo(WallCommentCrudController::class, 'Коментари в блога', 'fa fa-comments');
         yield MenuItem::linkTo(SettingCrudController::class, 'Текстове на сайта', 'fa fa-feather');
         yield MenuItem::linkToUrl('Към сайта', 'fa fa-arrow-up-right-from-square', '/')->setLinkTarget('_blank');
     }
