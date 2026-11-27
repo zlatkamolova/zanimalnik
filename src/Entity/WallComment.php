@@ -20,6 +20,9 @@ class WallComment
     public const VIA_FORM = 'form';
     public const VIA_API = 'api';
 
+    /** Names of the site itself; only a signed-in administrator may use them (in the form). */
+    public const RESERVED_NAMES = ['admin', 'админ', 'administrator', 'администратор', 'занималник', 'zanimalnik'];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -106,6 +109,17 @@ class WallComment
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public static function isReservedName(string $name): bool
+    {
+        return \in_array(mb_strtolower($name), self::RESERVED_NAMES, true);
+    }
+
+    /** Written under one of the reserved names, so by the administrator (or created with the wall). */
+    public function isFromAdmin(): bool
+    {
+        return self::isReservedName($this->name);
     }
 
     public function getMessage(): string

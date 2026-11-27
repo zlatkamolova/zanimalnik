@@ -87,7 +87,7 @@ final class WallTest extends WebDatabaseTestCase
         self::assertSame('admin каза:', $crawler->filter('.comment-author')->first()->text());
         self::assertSame('27 ноември 2026 в 10:00', $crawler->filter('.comment-metadata time')->first()->text());
         self::assertSame('Операционна система: Windows 10', $crawler->filter('.comment-os')->first()->text());
-        self::assertCount(2, $crawler->filter('.comment-author svg.avatar'));
+        self::assertCount(2, $crawler->filter('.comment-author svg.avatar-admin'), 'The administrator has a person for an avatar.');
         self::assertSelectorNotExists('.via');
         self::assertStringNotContainsString('gravatar', $html);
 
@@ -142,6 +142,8 @@ final class WallTest extends WebDatabaseTestCase
         self::assertStringContainsString("<p>Игра с карти.<br />\nЗа двама.</p>", (string) $this->client->getResponse()->getContent());
         self::assertSame('Операционна система: Linux Mint', $crawler->filter('#comment-'.$comment->getId().' .comment-os')->text());
         self::assertCount(0, $crawler->filter('#comment-'.$comment->getId().' .via'), 'Only comments from the API are marked.');
+        self::assertCount(1, $crawler->filter('#comment-'.$comment->getId().' svg.avatar-bot'), 'Everybody else has a robot.');
+        self::assertCount(2, $crawler->filter('svg.avatar-admin'));
         self::assertSame('Мила за Събираме идеи', $crawler->filter('.widget')->eq(1)->filter('li')->first()->text());
     }
 

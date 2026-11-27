@@ -355,7 +355,6 @@ pre code {
     fill: var(--teal);
 }
 
-.avatar circle,
 .avatar path {
     fill: var(--paper);
 }
