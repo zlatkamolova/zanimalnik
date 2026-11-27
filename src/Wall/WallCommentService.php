@@ -30,9 +30,6 @@ final class WallCommentService
     public const REQUIRED = 'Полето е задължително.';
     public const NO_LINKS = 'Линкове не са позволени.';
 
-    /** Names of the site itself; only a signed-in administrator may use them (in the form). */
-    private const RESERVED_NAMES = ['admin', 'админ', 'administrator', 'администратор', 'занималник', 'zanimalnik'];
-
     /** field => [shortest, longest, text when outside that range] */
     private const FIELDS = [
         'name' => [2, 40, 'Името трябва да е между 2 и 40 знака.'],
@@ -131,7 +128,7 @@ final class WallCommentService
                 $errors[$field] = $lengthMessage;
             } elseif (preg_match(self::LINK, $value)) {
                 $errors[$field] = self::NO_LINKS;
-            } elseif ('name' === $field && !$isAdmin && \in_array(mb_strtolower($value), self::RESERVED_NAMES, true)) {
+            } elseif ('name' === $field && !$isAdmin && WallComment::isReservedName($value)) {
                 $errors[$field] = 'Името е заето.';
             }
 
